@@ -20,10 +20,10 @@
 #
 domain: rmitsuboshi.github.io
 url: https://rmitsuboshi.github.io
-github: /rmitsuboshi.github.io/
+github: /rmitsuboshi.github.io
 
 title: RMITSUBOSHI
-description: My first home page
+# description: 
 # email: your-email@example.com
 # description: >- # this means to ignore newlines until "baseurl:"
 #   Write an awesome description for your new site here. You can edit this
@@ -36,10 +36,8 @@ github_username: rmitsuboshi
 
 # Build settings
 remote_theme: pages-themes/hacker@v0.2.0
-# theme: minima
 plugins:
   - jekyll-remote-theme
-    # - jekyll-feed
 
 # Exclude from processing.
 # The following items will not be processed, by default.
