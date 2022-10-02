@@ -18,9 +18,9 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 #
-# domain: rmitsuboshi.github.io
-# url: https://rmitsuboshi.github.io
-github: https://github.com/rmitsuboshi
+domain: rmitsuboshi.github.io
+url: https://rmitsuboshi.github.io
+github: /rmitsuboshi.github.io/
 
 title: RMITSUBOSHI
 description: My first home page
