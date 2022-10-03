@@ -5,28 +5,34 @@
 layout: default
 ---
 
-# Profile
-I'm a Ph. D. student studying machine learning algorithms and theories.
+# [Bio](/bio/)
 
-I use [Rust](https://www.rust-lang.org/) for programming.
 
 # Research interest
 * Machine Learning
     - Boosting
     - Support Vector Machines
-    - Statistical Learning theory
-    - Online learning
+    - Statistical Learning Theory
+    - Online Learning
 * Convex optimization
-    - Frank-Wolfe algorithms
+    - The Frank-Wolfe algorithms
 
 
 # Publications
 
 ## Preprints
+1. Ryotaro Mitsuboshi, Kohei Hatano, and Eiji Takimoto.  
+   Boosting as Frank-Wolfe.  
+   Preprint.  
+   [[arXiv](https://arxiv.org/abs/2209.10831)]
+   [[code](https://github.com/rmitsuboshi/boosting_as_frank_wolfe)]
+
 
 ## Referred conference proceedings
+
 
 ## Referred journals
 
 
 # Contact
+E-MAIL: `ryotaro.mitsuboshi[at]inf.kyushu-u.ac.jp`
