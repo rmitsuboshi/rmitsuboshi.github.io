@@ -20,9 +20,10 @@
 #
 domain: rmitsuboshi.github.io
 url: https://rmitsuboshi.github.io
+# github: https://github.com/rmitsuboshi
 github: /rmitsuboshi.github.io
 
-title: RMITSUBOSHI
+title: Ryotaro Mitsuboshi
 # description: 
 # email: your-email@example.com
 # description: >- # this means to ignore newlines until "baseurl:"

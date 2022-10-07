@@ -8,7 +8,7 @@ layout: default
 # [Bio](/bio/)
 
 
-# Research interest
+# Research interests
 * Machine Learning
     - Boosting
     - Support Vector Machines
@@ -34,5 +34,10 @@ layout: default
 ## Referred journals
 
 
+# Project
+1. [miniboosts](https://github.com/rmitsuboshi/miniboosts) is 
+    a boosting library implemented in [Rust](https://www.rust-lang.org/).
+
+
 # Contact
-E-MAIL: `ryotaro.mitsuboshi[at]inf.kyushu-u.ac.jp`
+`ryotaro.mitsuboshi[at]inf.kyushu-u.ac.jp`
