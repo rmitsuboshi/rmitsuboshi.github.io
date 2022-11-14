@@ -26,6 +26,11 @@ layout: default
    Preprint.  
    [[arXiv](https://arxiv.org/abs/2209.10831)]
    [[code](https://github.com/rmitsuboshi/boosting_as_frank_wolfe)]
+2. Yuta Kurokawa, Ryotaro Mitsuboshi, Haruki Hamasaki, Kohei Hatano, Eiji Takimoto, and Horakou Rahmanian.  
+   Extended formulations via decision diagrams.  
+   Preprint.  
+   [[arXiv](https://arxiv.org/abs/2211.06065)]
+   [[code](https://bitbucket.org/kohei_hatano/codes_extended_formulation_nzdd/src/master/)]
 
 
 ## Referred conference proceedings
