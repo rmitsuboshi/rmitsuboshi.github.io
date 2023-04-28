@@ -4,4 +4,6 @@ defaultContentLanguage = 'en-us'
 hasCJKLanguage = true
 title = 'R. Mitsuboshi'
 theme = 'beautifulhugo'
-github = 'https://github.com/rmitsuboshi'
+
+[Params.widgets.social]
+github = 'rmitsuboshi'
