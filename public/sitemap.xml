@@ -2,14 +2,8 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://rmitsuboshi.github.io/post/about/</loc>
-    <lastmod>2023-04-28T13:38:04+09:00</lastmod>
-  </url><url>
-    <loc>https://rmitsuboshi.github.io/post/</loc>
-    <lastmod>2023-04-28T13:38:04+09:00</lastmod>
-  </url><url>
     <loc>https://rmitsuboshi.github.io/</loc>
-    <lastmod>2023-04-28T13:38:04+09:00</lastmod>
+    <priority>0</priority>
   </url><url>
     <loc>https://rmitsuboshi.github.io/categories/</loc>
   </url><url>
