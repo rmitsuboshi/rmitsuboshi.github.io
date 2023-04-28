@@ -5,5 +5,12 @@ hasCJKLanguage = true
 title = 'R. Mitsuboshi'
 theme = 'beautifulhugo'
 
-[Params.widgets.social]
-github = 'rmitsuboshi'
+
+[Author]
+name   = "R. Mitsuboshi"
+github = "rmitsuboshi"
+
+
+[[menu.main]]
+    name = "HOME"
+    url = "https://rmitsuboshi.github.io"
