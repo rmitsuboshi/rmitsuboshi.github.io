@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on R. Mitsuboshi</title>
+    <link>https://rmitsuboshi.github.io/post/</link>
+    <description>Recent content in Posts on R. Mitsuboshi</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 28 Apr 2023 13:38:04 +0900</lastBuildDate><atom:link href="https://rmitsuboshi.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Bio</title>
+      <link>https://rmitsuboshi.github.io/post/about/</link>
+      <pubDate>Fri, 28 Apr 2023 13:38:04 +0900</pubDate>
+      
+      <guid>https://rmitsuboshi.github.io/post/about/</guid>
+      <description>Ryotaro Mitsuboshi is a Ph. D. student studying machine learning algorithms and theories. His current interest is the theoretically guaranteed boosting algorithms.
+He uses Rust for programming.</description>
+    </item>
+    
+  </channel>
+</rss>
