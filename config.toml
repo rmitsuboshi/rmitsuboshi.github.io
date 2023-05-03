@@ -1,16 +1,24 @@
 baseURL = 'https://rmitsuboshi.github.io'
-languageCode = 'en-us'
-defaultContentLanguage = 'en-us'
+languageCode = 'en'
+defaultContentLanguage = 'en'
 hasCJKLanguage = true
 title = 'R. Mitsuboshi'
 theme = 'beautifulhugo'
+dateFormat = "January 1, 2023"
+
+
+[Params]
+mainSections = ["post"]
 
 
 [Author]
 name   = "R. Mitsuboshi"
 github = "rmitsuboshi"
+# reddit = "__leopardus__"
+linkedin = "rmitsuboshi"
 
 
 [[menu.main]]
-    name = "HOME"
-    url = "https://rmitsuboshi.github.io"
+    name = "ABOUT"
+    url = "page/about"
+
