@@ -39,6 +39,8 @@ for programming.
 # Software
 1. [MiniBoosts](https://github.com/rmitsuboshi/miniboosts) is 
     a boosting library implemented in [Rust](https://www.rust-lang.org/).
+2. [Bandit](https://github.com/rmitsuboshi/bandit) is 
+    a collection of bandit algorithms.
 
 # Contact
 `ryotaro.mitsuboshi[at]inf.kyushu-u.ac.jp`
