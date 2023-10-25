@@ -25,16 +25,31 @@ for programming.
 
 
 # Publications
-1. Ryotaro Mitsuboshi, Kohei Hatano, and Eiji Takimoto.  
-   Boosting as Frank-Wolfe.  
+1. Ryotaro Mitsuboshi,
+   Kohei Hatano,
+   and Eiji Takimoto.  
+   **Boosting as Frank-Wolfe.**  
    Preprint.  
    [[arXiv](https://arxiv.org/abs/2209.10831)]
    [[code](https://github.com/rmitsuboshi/boosting_as_frank_wolfe)]
-2. Yuta Kurokawa, Ryotaro Mitsuboshi, Haruki Hamasaki, Kohei Hatano, Eiji Takimoto, and Horakou Rahmanian.  
-   Extended formulations via decision diagrams.  
+2. Yuta Kurokawa,
+   Ryotaro Mitsuboshi,
+   Haruki Hamasaki,
+   Kohei Hatano,
+   Eiji Takimoto,
+   and Horakou Rahmanian.  
+   **Extended formulations via decision diagrams.**  
    Preprint.  
    [[arXiv](https://arxiv.org/abs/2211.06065)]
    [[code](https://bitbucket.org/kohei_hatano/codes_extended_formulation_nzdd/src/master/)]
+3. Ryotaro Mitsuboshi,
+   Kohei Hatano,
+   Eiji Takimoto.  
+   **An Improved Metarounding Algorithm via Frank-Wolfe.**  
+   Preprint.  
+   [[arXiv](https://arxiv.org/abs/2310.12629)]
+   [[code](https://github.com/rmitsuboshi/metarounding_mitsuboshi)]
+
 
 # Software
 1. [MiniBoosts](https://github.com/rmitsuboshi/miniboosts) is 
