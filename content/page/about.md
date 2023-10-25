@@ -38,7 +38,7 @@ for programming.
    Kohei Hatano,
    Eiji Takimoto,
    and Horakou Rahmanian.  
-   **Extended formulations via decision diagrams.**  
+   **Extended Formulations via Decision Diagrams.**  
    Preprint.  
    [[arXiv](https://arxiv.org/abs/2211.06065)]
    [[code](https://bitbucket.org/kohei_hatano/codes_extended_formulation_nzdd/src/master/)]
