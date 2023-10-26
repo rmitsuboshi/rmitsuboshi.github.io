@@ -2,13 +2,15 @@ baseURL = 'https://rmitsuboshi.github.io'
 languageCode = 'en'
 defaultContentLanguage = 'en'
 hasCJKLanguage = true
-title = 'R. Mitsuboshi'
+title = 'Ryotaro Mitsuboshi'
 theme = 'beautifulhugo'
 dateFormat = "January 1, 2023"
+googleAnalytics = "google1ce4143752888e7c"
 
 
 [Params]
 mainSections = ["post"]
+# favicon = "img/favicon.ico"
 
 
 [Author]
@@ -22,3 +24,11 @@ linkedin = "rmitsuboshi"
     name = "ABOUT"
     url = "page/about"
 
+# [[menu.main]]
+#     name = "PUBLICATIONS"
+#     url = "page/publications"
+# 
+# [[menu.main]]
+#     name = "SOFTWARE"
+#     url = "page/software"
+# 
