@@ -6,11 +6,11 @@ draft: false
 ---
 
 Ryotaro Mitsuboshi is a Ph. D. student 
-studying machine learning algorithms and theories.
+studying machine learning algorithms and theories.  
 His current interest is theoretically guaranteed boosting algorithms.  
 He uses [Rust](https://www.rust-lang.org/), 
 [C](https://clang.llvm.org/)/[C++](https://isocpp.org/), 
-[Python](https://www.python.org/), and [Haskell](https://www.haskell.org/) 
+[Python 3](https://www.python.org/), and [Haskell](https://www.haskell.org/) 
 for programming.
 
 
@@ -39,13 +39,21 @@ for programming.
    Eiji Takimoto,
    and Horakou Rahmanian.  
    **Extended Formulations via Decision Diagrams.**  
-   Preprint.  
+   COCOON 2023.  
+   [[paper](https://link.springer.com/book/10.1007/978-3-031-49193-1)]
    [[arXiv](https://arxiv.org/abs/2211.06065)]
    [[code](https://bitbucket.org/kohei_hatano/codes_extended_formulation_nzdd/src/master/)]
 3. Ryotaro Mitsuboshi,
    Kohei Hatano,
-   Eiji Takimoto.  
-   **An Improved Metarounding Algorithm via Frank-Wolfe.**  
+   and Eiji Takimoto.  
+   **Solving Linear Regression with Insensitive Loss by Boosting.**  
+   IEICE Transactions on Information and Systems 2024.  
+   [[paper](https://search.ieice.org/bin/index.php?category=D&lang=E&curr=1)]
+   [[code](https://github.com/rmitsuboshi/insensitive_regression_boosting)]
+4. Ryotaro Mitsuboshi,
+   Kohei Hatano,
+   and Eiji Takimoto.  
+   **Online Combinatorial Linear Optimization via a Frank-Wolfe-based Metarounding Algorithm.**  
    Preprint.  
    [[arXiv](https://arxiv.org/abs/2310.12629)]
    [[code](https://github.com/rmitsuboshi/metarounding_mitsuboshi)]
