@@ -10,10 +10,10 @@ dateFormat = "January 1, 2023"
 [Params]
 mainSections = ["post"]
 # favicon = "img/favicon.ico"
-
+author.name = "R. Mitsuboshi"
 
 [Author]
-name   = "R. Mitsuboshi"
+# name   = "R. Mitsuboshi"
 github = "rmitsuboshi"
 # reddit = "__leopardus__"
 linkedin = "rmitsuboshi"
