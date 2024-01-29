@@ -1,0 +1,13 @@
+@charset "utf-8";
+
+
+h1 {
+    font-family: "Courier New";
+    /* color: #808000; */
+    color: #000000;
+}
+
+body {
+    font-family: "Courier New";
+    color: #000000;
+}
