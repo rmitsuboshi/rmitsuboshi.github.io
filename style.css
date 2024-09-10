@@ -2,11 +2,23 @@
 
 
 h1 {
-    font-family: "Courier New";
+    font-family: "Trattatello";
+    color: #000000;
+}
+
+#myphoto {
+    float: right;
+    margin 0 0 0 15px;
+}
+
+
+h3 {
+    font-family: "Palatino";
     color: #000000;
 }
 
 body {
-    font-family: "Courier New";
+    font-family: "Palatino";
     color: #000000;
 }
+
