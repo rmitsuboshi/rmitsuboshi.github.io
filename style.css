@@ -1,8 +1,8 @@
-@charset "utf-8";
+@charset 'utf-8';
 
 
 h1 {
-    font-family: "Trattatello";
+    font-family: 'Rosarivo', 'Times New Roman';
     color: #000000;
 }
 
@@ -13,12 +13,12 @@ h1 {
 
 
 h3 {
-    font-family: "Palatino";
+    font-family: 'Rosarivo', 'Lugrasimo', 'Times New Roman';
     color: #000000;
 }
 
 body {
-    font-family: "Palatino";
+    font-family: 'Rosarivo', 'Lugrasimo', 'Times New Roman';
     color: #000000;
 }
 
