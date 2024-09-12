@@ -1,8 +1,8 @@
-@charset "utf-8";
+@charset 'utf-8';
 
 
 h1 {
-    font-family: 'Noto Sans JP';
+    font-family: 'Klee One';
     color: #000000;
 }
 
@@ -13,12 +13,12 @@ h1 {
 
 
 h3 {
-    font-family: 'Noto Sans JP';
+    font-family: 'Klee One';
     color: #000000;
 }
 
 body {
-    font-family: 'Noto Sans JP';
+    font-family: 'Klee One';
     color: #000000;
 }
 
