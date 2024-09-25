@@ -3,16 +3,20 @@
 
 h1 {
     font-family: 'Rosarivo', 'Times New Roman';
-    color: #000000;
+    color: navy;
 }
 
-#myphoto {
-    float: right;
-    margin 0 0 0 15px;
+h2 {
+    font-family: 'Rosarivo', 'Lugrasimo', 'Times New Roman';
+    color: navy;
 }
-
 
 h3 {
+    font-family: 'Rosarivo', 'Lugrasimo', 'Times New Roman';
+    color: navy;
+}
+
+h4 {
     font-family: 'Rosarivo', 'Lugrasimo', 'Times New Roman';
     color: #000000;
 }
@@ -22,3 +26,15 @@ body {
     color: #000000;
 }
 
+
+div.logo img {
+    margin: 10px 20px 10px 20px;
+    height: 30px;
+    width: auto;
+}
+
+
+#myphoto {
+    float: right;
+    margin 0 0 0 15px;
+}
