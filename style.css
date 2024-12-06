@@ -2,27 +2,30 @@
 
 
 h1 {
-    font-family: 'Rosarivo', 'Times New Roman';
+    font-family: 'Play', 'Rosarivo', 'Times New Roman';
+    font-size: 30pt;
     color: navy;
 }
 
 h2 {
-    font-family: 'Rosarivo', 'Lugrasimo', 'Times New Roman';
+    font-family: 'Play', 'Rosarivo', 'Lugrasimo', 'Times New Roman';
+    font-size: 20pt;
     color: navy;
 }
 
 h3 {
-    font-family: 'Rosarivo', 'Lugrasimo', 'Times New Roman';
+    font-family: 'Play', 'Rosarivo', 'Lugrasimo', 'Times New Roman';
+    font-size: 20pt;
     color: navy;
 }
 
 h4 {
-    font-family: 'Rosarivo', 'Lugrasimo', 'Times New Roman';
+    font-family: 'Play', 'Rosarivo', 'Lugrasimo', 'Times New Roman';
     color: #000000;
 }
 
 body {
-    font-family: 'Rosarivo', 'Lugrasimo', 'Times New Roman';
+    font-family: 'Play', 'Rosarivo', 'Lugrasimo', 'Times New Roman';
     color: #000000;
 }
 
