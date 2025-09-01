@@ -4,3 +4,9 @@ _site
 .jekyll-metadata
 vendor
 .DS_Sture
+
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz

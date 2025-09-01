@@ -1,0 +1,225 @@
+\documentclass[10pt, letterpaper]{article}
+
+% Packages:
+\usepackage[
+    ignoreheadfoot, % set margins without considering header and footer
+    top=2 cm, % seperation between body and page edge from the top
+    bottom=2 cm, % seperation between body and page edge from the bottom
+    left=2 cm, % seperation between body and page edge from the left
+    right=2 cm, % seperation between body and page edge from the right
+    footskip=1.0 cm, % seperation between body and footer
+    % showframe % for debugging 
+]{geometry} % for adjusting page geometry
+\usepackage{titlesec} % for customizing section titles
+\usepackage{tabularx} % for making tables with fixed width columns
+\usepackage{array} % tabularx requires this
+\usepackage[dvipsnames]{xcolor} % for coloring text
+\definecolor{primaryColor}{RGB}{0, 79, 144} % define primary color
+\usepackage{enumitem} % for customizing lists
+\usepackage{fontawesome5} % for using icons
+\usepackage{amsmath} % for math
+\usepackage[hidelinks]{hyperref} % for links, metadata and bookmarks
+\usepackage[pscoord]{eso-pic} % for floating text on the page
+\usepackage{calc} % for calculating lengths
+\usepackage{bookmark} % for bookmarks
+\usepackage{lastpage} % for getting the total number of pages
+\usepackage{changepage} % for one column entries (adjustwidth environment)
+\usepackage{paracol} % for two and three column entries
+\usepackage{ifthen} % for conditional statements
+\usepackage{needspace} % for avoiding page brake right after the section title
+\usepackage{iftex} % check if engine is pdflatex, xetex or luatex
+\usepackage{url}
+% Ensure that generate pdf is machine readable/ATS parsable:
+\ifPDFTeX
+    \input{glyphtounicode}
+    \pdfgentounicode=1
+    % \usepackage[T1]{fontenc} % this breaks sb2nov
+    \usepackage[utf8]{inputenc}
+    \usepackage{lmodern}
+\fi
+
+
+
+% Some settings:
+\AtBeginEnvironment{adjustwidth}{\partopsep0pt} % remove space before adjustwidth environment
+\pagestyle{empty} % no header or footer
+\setcounter{secnumdepth}{0} % no section numbering
+\setlength{\parindent}{0pt} % no indentation
+\setlength{\topskip}{0pt} % no top skip
+\setlength{\columnsep}{0cm} % set column seperation
+
+\titleformat{\section}{\needspace{4\baselineskip}\bfseries\large}{}{0pt}{}[\vspace{1pt}\titlerule]
+
+\titlespacing{\section}{
+    % left space:
+    -1pt
+}{
+    % top space:
+    0.3 cm
+}{
+    % bottom space:
+    0.2 cm
+} % section title spacing
+
+\renewcommand\labelitemi{$\circ$} % custom bullet points
+\newenvironment{highlights}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=0.4 cm + 10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights
+
+\newenvironment{highlightsforbulletentries}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights for bullet entries
+
+
+\newenvironment{onecolentry}{
+    \begin{adjustwidth}{
+        0.2 cm + 0.00001 cm
+    }{
+        0.2 cm + 0.00001 cm
+    }
+}{
+    \end{adjustwidth}
+} % new environment for one column entries
+
+\newenvironment{twocolentry}[2][]{
+    \onecolentry
+    \def\secondColumn{#2}
+    \setcolumnwidth{\fill, 4.5 cm}
+    \begin{paracol}{2}
+}{
+    \switchcolumn \raggedleft \secondColumn
+    \end{paracol}
+    \endonecolentry
+} % new environment for two column entries
+
+\newenvironment{header}{
+    \setlength{\topsep}{0pt}\par\kern\topsep\centering\linespread{1.5}
+}{
+    \par\kern\topsep
+} % new environment for the header
+
+% save the original href command in a new command:
+\let\hrefWithoutArrow\href
+
+% new command for external links:
+\renewcommand{\href}[2]{\hrefWithoutArrow{#1}{\ifthenelse{\equal{#2}{}}{ }{#2 }\raisebox{.15ex}{\footnotesize \faExternalLink*}}}
+
+
+\begin{document}
+    \newcommand{\AND}{\unskip
+        \cleaders\copy\ANDbox\hskip\wd\ANDbox
+        \ignorespaces
+    }
+    \newsavebox\ANDbox
+    \sbox\ANDbox{}
+
+    \begin{header}
+        \textbf{\fontsize{24 pt}{24 pt}\selectfont RYOTARO MITSUBOSHI}
+    \end{header}
+
+    \vspace{0.5 cm}
+
+
+    \section{PERSONAL DETAIL}
+        \begin{tabular}{ll}
+            NAME & Ryotaro MITSUBOSHI \\
+            POSITION & Data Analyst \\
+            Affiliation & Cisco Systems G.K. \\
+            EMAIL &  \url{[email removed]} \\
+            HOMEPAGE & \url{https://rmitsuboshi.github.io} \\
+            GOOGLE SCHOLAR & \url{https://scholar.google.com/citations?user=gIBxMFkAAAAJ} \\
+            ORCID ID & \url{https://orcid.org/0000-0003-2277-6750} \\
+        \end{tabular}
+
+    \section{SUMMARY}
+
+    \begin{onecolentry}
+        A machine learning researcher specialized in theoretical convergence rates for boosting, online learning, and Frank-Wolfe algorithms.
+    \end{onecolentry}
+
+    \section{EDUCATION}
+    \begin{tabularx}{\textwidth}{Xr}
+        \begin{tabular}{l}
+            {\bf \large Doctor of Information Science} \\
+            Department of Informatics, \\
+            Kyushu University, Japan
+        \end{tabular}
+        & April 2020 -- September 2024 \\
+        \begin{tabular}{l}
+            {\bf \large Master of Computer Science} \\
+            Department of Informatics, \\
+            Kyushu University, Japan
+        \end{tabular}
+        & April 2018 -- March 2020 \\
+        \begin{tabular}{l}
+            {\bf \large Bachelor of Science} \\
+            Faculty of Physics, \\
+            Kyushu University, Japan
+        \end{tabular}
+        & April 2018 -- March 2020 \\
+    \end{tabularx}
+    
+    \section{WORK EXPERIENCE}
+    \begin{tabularx}{\textwidth}{Xr}
+        \begin{tabular}{l}
+            {\bf \large Data Analyst} \\
+            Cisco Systems G.K.
+        \end{tabular}
+        & September 2025 -- Present \\
+        \begin{tabular}{l}
+            {\bf \large System Engineer} \\
+            IoT Division,
+            Internet Initiative Japan Inc.
+        \end{tabular}
+        & April 2024 -- August 2025 \\
+        \begin{tabular}{l}
+            {\bf \large Part-time job} \\
+            Computational Learning Theory Theam,
+            RIKEN AIP
+        \end{tabular}
+        & June 2020 -- March 2024 \\
+    \end{tabularx}
+
+    \section{Publications}
+    \begin{itemize}
+        \item Yuta Kurokawa, Ryotaro Mitsuboshi, Haruki Hamasaki, Kohei Hatano, Eiji Takimoto, and Holakou Rahmanian. Extended Formulations via Decision Diagrams.
+        The 29th Annual International Computing and Combinatorics Conference, 2023.
+        \item Ryotaro Mitsuboshi, Kohei Hatano, and Eiji Takimoto.
+        Solving Linear Regression with Insensitive Loss by Boosting.
+        IEICE Transactions on Information and Systems, 2024.
+        \item Ryotaro Mitsuboshi, Kohei Hatano, and Eiji Takimoto.
+        Online Combinatorial Linear Optimization via a Frank-Wolfe-based Metarounding Algorithm.
+        IEICE Transactions on Information and Systems, 2024.
+    \end{itemize}
+
+
+    \section{PROJECTS}
+    \begin{tabular}{ll}
+        \href{https://github.com/rmitsuboshi/miniboosts}{Miniboosts} &
+            A collection of boosting algorithms written in Rust. \\
+        \href{https://github.com/rmitsuboshi/bandit}{Bandit} &
+            A small collection of bandit algorithms written in Rust.
+    \end{tabular}
+    
+    \section{SKILLS}
+        \begin{onecolentry}
+            \textbf{Languages:} Rust, C/C++, Python3, Go, Haskell
+        \end{onecolentry}
+\end{document}
+
