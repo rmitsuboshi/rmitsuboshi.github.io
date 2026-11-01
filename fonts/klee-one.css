@@ -1,0 +1,16 @@
+/* Klee One (SIL Open Font License 1.1, see OFL-KleeOne.txt), subset to
+   the characters of index-jp.html by _tools/subset_klee_one.py. */
+@font-face {
+  font-family: 'Klee One';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(klee-one-400.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Klee One';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(klee-one-600.woff2) format('woff2');
+}

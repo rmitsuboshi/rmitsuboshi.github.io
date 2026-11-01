@@ -1,0 +1,213 @@
+@charset 'utf-8';
+
+:root {
+    --pos: #1f5fbf;
+    --neg: #d4521c;
+    --ink: #1a1a1a;
+    --muted: #666;
+    --line: #d6d6de;
+    --panel: #f6f6f9;
+    --navy: navy;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0 auto;
+    max-width: 1032px;
+    padding: 16px;
+    background: #fff;
+    color: var(--ink);
+    font-family: 'Play', 'Times New Roman', sans-serif;
+    line-height: 1.5;
+}
+
+a { color: var(--navy); }
+h1, h2, h3 { color: var(--navy); }
+h1 { margin: 0; font-size: 34pt; }
+h2 { margin: 1.6em 0 0.4em; font-size: 20pt; border-bottom: 1px solid var(--line); }
+h3 { margin: 1em 0 0.3em; font-size: 13pt; }
+
+.crumbs { font-size: 0.9em; }
+
+.hero { margin-top: 12px; }
+.tagline { margin: 0.2em 0 0.8em; font-size: 1.2em; }
+.links { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.links a:last-child { margin-left: 8px; }
+.badges { margin: 10px 0 0; display: flex; gap: 6px; flex-wrap: wrap; }
+
+a.button {
+    display: inline-block;
+    padding: 4px 14px;
+    border: 1px solid var(--navy);
+    border-radius: 4px;
+    color: var(--navy);
+    text-decoration: none;
+}
+a.button:hover { background: var(--navy); color: #fff; }
+
+code { font-size: 0.92em; }
+pre {
+    margin: 0;
+    padding: 10px 12px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: 0.85em;
+    line-height: 1.4;
+}
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.two-col > div { min-width: 0; }
+
+table { border-collapse: collapse; width: 100%; font-size: 0.92em; }
+td { padding: 3px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+td:first-child { white-space: nowrap; font-weight: 700; }
+
+footer { margin: 32px 0 8px; text-align: center; }
+
+/* ---------------------------------------------------------------- demo */
+
+.demo {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+.board { flex: 0 1 600px; min-width: 0; }
+
+canvas#canvas {
+    display: block;
+    width: 100%;
+    max-width: 600px;
+    aspect-ratio: 1;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    cursor: crosshair;
+    touch-action: manipulation;
+}
+
+.hint, .muted { color: var(--muted); font-size: 0.9em; }
+
+.panel {
+    flex: 1 1 300px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+fieldset {
+    margin: 0;
+    padding: 10px 12px 12px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--panel);
+}
+
+legend { color: var(--navy); font-weight: 700; padding: 0 4px; }
+
+select, input, button { font: inherit; }
+select { width: 100%; padding: 4px; }
+
+/* The opened list of a native <select> ignores web fonts on most systems.
+   Customizable selects (Chrome 135+) draw it in the page font; other
+   browsers keep the native list. */
+@supports (appearance: base-select) {
+    select, ::picker(select) { appearance: base-select; }
+    select {
+        border: 1px solid #aab;
+        border-radius: 4px;
+        background: #fff;
+    }
+    ::picker(select) {
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        padding: 4px 0;
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+    option { padding: 3px 10px; }
+    option:hover, option:focus-visible { background: var(--panel); }
+    option:checked { color: var(--navy); font-weight: 700; }
+}
+
+.presets {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+}
+.presets button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
+    font-size: 0.75em;
+    line-height: 1.2;
+}
+.presets canvas {
+    width: 100%;
+    aspect-ratio: 1;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: #fff;
+}
+.presets button:hover canvas { border-color: var(--navy); }
+
+.row { display: flex; gap: 6px; margin-top: 8px; align-items: center; flex-wrap: wrap; }
+
+.classes { gap: 14px; font-weight: 700; }
+.classes .muted { font-weight: 400; }
+.classes .pos { color: var(--pos); }
+.classes .neg { color: var(--neg); }
+
+.param, .lparam {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+p.lparam { display: block; margin: 8px 0 0; }
+.param input, .lparam input { width: 90px; padding: 2px 4px; }
+.lparam select { width: auto; }
+.param[hidden], .lparam[hidden] { display: none; }
+
+button {
+    padding: 4px 12px;
+    border: 1px solid #aab;
+    border-radius: 4px;
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+}
+button:hover:not(:disabled) { border-color: var(--navy); }
+button:disabled { opacity: 0.5; cursor: default; }
+button.primary {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+    padding: 6px 24px;
+}
+
+.actions { display: flex; gap: 8px; align-items: center; }
+.auto { margin-left: auto; }
+
+.status {
+    min-height: 3em;
+    padding: 8px 12px;
+    border-left: 4px solid var(--line);
+    background: var(--panel);
+    font-size: 0.95em;
+}
+.status.error { border-left-color: #c0392b; color: #8e2a1f; }
+.status.ok { border-left-color: var(--navy); }
+
+@media (max-width: 760px) {
+    h1 { font-size: 26pt; }
+    .two-col { grid-template-columns: 1fr; gap: 0; }
+    .demo { flex-direction: column; }
+    .board, .panel { flex: none; width: 100%; }
+}
