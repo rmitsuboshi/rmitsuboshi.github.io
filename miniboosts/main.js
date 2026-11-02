@@ -333,6 +333,7 @@ function setPoints(next) {
 
 function pointsChanged() {
     stale = field !== null;
+    selectPreset(null);
     // The timeline (snapshots and weights) belongs to the old points.
     hideTimeline();
     timeline = null;
@@ -493,7 +494,8 @@ const PRESETS = [
         }
         return out;
     }],
-    ['checker', 'Checkerboard', (rand) => {
+    // The soft hyphen lets the label break as "Checker-/board" in a narrow button.
+    ['checker', 'Checker\u00adboard', (rand) => {
         const out = [];
         for (let i = 0; i < 120; i++) {
             const x = uniform(rand);
@@ -540,8 +542,19 @@ for (const [key, title, make] of PRESETS) {
         // Test points: an independent draw from the same generator.
         const test = generate(make, PRESET_SEED + 1).map((p) => ({ ...p, test: true }));
         setPoints([...data.map((p) => ({ ...p })), ...test]);
+        selectPreset(button);
         loadedMessage(`Loaded “${title}”.`);
     });
+}
+
+// Marks the preset whose points are shown; any other change of the points
+// (editing, Random, Clear, Undo) clears the mark in `pointsChanged`.
+function selectPreset(selected) {
+    for (const button of $('presets').querySelectorAll('button')) {
+        const on = button === selected;
+        button.classList.toggle('selected', on);
+        button.setAttribute('aria-pressed', String(on));
+    }
 }
 
 // Random Gaussian clusters, each with a random label, plus optional label
@@ -833,6 +846,7 @@ function applyTheme(name) {
     $('playground').dataset.theme = key;
     $('playground').style.setProperty('--train-color', theme.chart.train);
     $('playground').style.setProperty('--test-color', theme.chart.test);
+    $('playground').style.setProperty('--accent', theme.chart.train);
     try {
         localStorage.setItem('miniboosts-theme', key);
     } catch {

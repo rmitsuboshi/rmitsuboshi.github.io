@@ -192,7 +192,9 @@ select { width: 100%; padding: 4px; }
 
 .presets {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    /* minmax(0, 1fr): equal columns even when a label is long ("1fr" alone
+       would widen a column to fit an unbreakable word). */
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 6px;
 }
 .presets button {
@@ -212,6 +214,13 @@ select { width: 100%; padding: 4px; }
     background: #fff;
 }
 .presets button:hover canvas { border-color: var(--navy); }
+/* The loaded preset: a ring in the theme's accent color (no layout shift). */
+.presets button.selected {
+    border-color: var(--accent, var(--navy));
+    box-shadow: 0 0 0 1.5px var(--accent, var(--navy));
+}
+.presets button.selected canvas { border-color: var(--accent, var(--navy)); }
+.presets button.selected span { color: var(--accent, var(--navy)); font-weight: 700; }
 
 .row { display: flex; gap: 6px; margin-top: 8px; align-items: center; flex-wrap: wrap; }
 
@@ -320,7 +329,7 @@ button.primary {
         gap: 10px;
     }
     .panel > fieldset:first-child, .panel > .actions, .panel > .status { grid-column: 1 / -1; }
-    .presets { grid-template-columns: repeat(8, 1fr); }
+    .presets { grid-template-columns: repeat(8, minmax(0, 1fr)); }
 }
 
 @media (max-width: 760px) {
