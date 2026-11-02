@@ -19,6 +19,109 @@ export class Fit {
         wasm.__wbg_fit_free(ptr, 0);
     }
     /**
+     * Confidences `f_t(x_i)` of the snapshot after each round in
+     * `curveRounds`, one row of `n` values per round. Snapshots are the
+     * boosters' combined hypotheses, with weights normalized to `Σ|w| = 1`.
+     * @returns {Float64Array}
+     */
+    get curveConfidences() {
+        const ret = wasm.fit_curveConfidences(this.__wbg_ptr);
+        var v1 = getArrayF64FromWasm0(ret[0], ret[1]).slice();
+        wasm.__wbindgen_free(ret[0], ret[1] * 8, 8);
+        return v1;
+    }
+    /**
+     * The algorithm's own objective (see `Objective`) after each round in
+     * `curveRounds`, or NaN for algorithms without one.
+     * @returns {Float64Array}
+     */
+    get curveObjective() {
+        const ret = wasm.fit_curveObjective(this.__wbg_ptr);
+        var v1 = getArrayF64FromWasm0(ret[0], ret[1]).slice();
+        wasm.__wbindgen_free(ret[0], ret[1] * 8, 8);
+        return v1;
+    }
+    /**
+     * Rounds `t` (number of weak hypotheses produced) whose snapshot
+     * confidences on the training points are in `curveConfidences`.
+     * @returns {Uint32Array}
+     */
+    get curveRounds() {
+        const ret = wasm.fit_curveRounds(this.__wbg_ptr);
+        var v1 = getArrayU32FromWasm0(ret[0], ret[1]).slice();
+        wasm.__wbindgen_free(ret[0], ret[1] * 4, 4);
+        return v1;
+    }
+    /**
+     * Confidences of the snapshot after each round in `curveRounds` on the
+     * test points, one row per round (empty without test points). The
+     * test points are never used for training.
+     * @returns {Float64Array}
+     */
+    get curveTestConfidences() {
+        const ret = wasm.fit_curveTestConfidences(this.__wbg_ptr);
+        var v1 = getArrayF64FromWasm0(ret[0], ret[1]).slice();
+        wasm.__wbindgen_free(ret[0], ret[1] * 8, 8);
+        return v1;
+    }
+    /**
+     * Name of a step after the last round shown as the final frame, such
+     * as `"sparsification"`, or empty.
+     * @returns {string}
+     */
+    get finalStep() {
+        let deferred1_0;
+        let deferred1_1;
+        try {
+            const ret = wasm.fit_finalStep(this.__wbg_ptr);
+            deferred1_0 = ret[0];
+            deferred1_1 = ret[1];
+            return getStringFromWasm0(ret[0], ret[1]);
+        } finally {
+            wasm.__wbindgen_free(deferred1_0, deferred1_1, 1);
+        }
+    }
+    /**
+     * For each frame, the distribution over the training points that the
+     * booster passed to the weak learner in that round.
+     * @returns {Float64Array}
+     */
+    get frameDists() {
+        const ret = wasm.fit_frameDists(this.__wbg_ptr);
+        var v1 = getArrayF64FromWasm0(ret[0], ret[1]).slice();
+        wasm.__wbindgen_free(ret[0], ret[1] * 8, 8);
+        return v1;
+    }
+    /**
+     * Snapshot confidences on the `frameResolution²` grid for each frame,
+     * in the same layout as `grid`.
+     * @returns {Float32Array}
+     */
+    get frameGrids() {
+        const ret = wasm.fit_frameGrids(this.__wbg_ptr);
+        var v1 = getArrayF32FromWasm0(ret[0], ret[1]).slice();
+        wasm.__wbindgen_free(ret[0], ret[1] * 4, 4);
+        return v1;
+    }
+    /**
+     * Side length of the frame grids.
+     * @returns {number}
+     */
+    get frameResolution() {
+        const ret = wasm.fit_frameResolution(this.__wbg_ptr);
+        return ret >>> 0;
+    }
+    /**
+     * Rounds kept as timeline frames.
+     * @returns {Uint32Array}
+     */
+    get frameRounds() {
+        const ret = wasm.fit_frameRounds(this.__wbg_ptr);
+        var v1 = getArrayU32FromWasm0(ret[0], ret[1]).slice();
+        wasm.__wbindgen_free(ret[0], ret[1] * 4, 4);
+        return v1;
+    }
+    /**
      * Ensemble confidence on the grid, row-major from `(x, y) = (-1, 1)`
      * (top-left) to `(1, -1)` (bottom-right).
      * @returns {Float64Array}
@@ -75,6 +178,14 @@ export class Fit {
         }
     }
     /**
+     * Fraction of misclassified test points, or NaN without test points.
+     * @returns {number}
+     */
+    get testError() {
+        const ret = wasm.fit_testError(this.__wbg_ptr);
+        return ret;
+    }
+    /**
      * Fraction of misclassified training points.
      * @returns {number}
      */
@@ -97,7 +208,9 @@ export function start() {
 /**
  * Trains `algorithm` with the weak learner `learner` on the points
  * `(xs[i], ys[i])` with labels `labels[i] ∈ {-1, +1}` and evaluates the
- * result on a `resolution × resolution` grid.
+ * result on a `resolution × resolution` grid and on the held-out test
+ * points `(test_xs[i], test_ys[i])` with labels `test_labels[i]` (possibly
+ * none), which are not used for training.
  *
  * `booster` holds the booster parameters: `maxIterations`, `tolerance`,
  * `nu` (capping, `1 ≤ nu ≤ n`), `gamma` and `kappa` (SmoothBoost),
@@ -112,14 +225,17 @@ export function start() {
  * @param {Float64Array | number[]} xs
  * @param {Float64Array | number[]} ys
  * @param {Float64Array | number[]} labels
+ * @param {Float64Array | number[]} test_xs
+ * @param {Float64Array | number[]} test_ys
+ * @param {Float64Array | number[]} test_labels
  * @param {any} booster
  * @param {any} weak
  * @param {number} resolution
  * @returns {Fit}
  */
-export function train(algorithm, learner, xs, ys, labels, booster, weak, resolution) {
-    const val6 = +resolution;
-    let ptr0, len0, ptr1, len1, ptr2, len2, ptr3, len3, ptr4, len4;
+export function train(algorithm, learner, xs, ys, labels, test_xs, test_ys, test_labels, booster, weak, resolution) {
+    const val9 = +resolution;
+    let ptr0, len0, ptr1, len1, ptr2, len2, ptr3, len3, ptr4, len4, ptr5, len5, ptr6, len6, ptr7, len7;
     try {
         ptr0 = passStringToWasm0(algorithm, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         len0 = WASM_VECTOR_LEN;
@@ -131,7 +247,16 @@ export function train(algorithm, learner, xs, ys, labels, booster, weak, resolut
         len3 = WASM_VECTOR_LEN;
         ptr4 = passArrayF64ToWasm0(labels, wasm.__wbindgen_malloc);
         len4 = WASM_VECTOR_LEN;
+        ptr5 = passArrayF64ToWasm0(test_xs, wasm.__wbindgen_malloc);
+        len5 = WASM_VECTOR_LEN;
+        ptr6 = passArrayF64ToWasm0(test_ys, wasm.__wbindgen_malloc);
+        len6 = WASM_VECTOR_LEN;
+        ptr7 = passArrayF64ToWasm0(test_labels, wasm.__wbindgen_malloc);
+        len7 = WASM_VECTOR_LEN;
     } catch (e) {
+        if (ptr7) { wasm.__wbindgen_free(ptr7, len7 * 8, 8); }
+        if (ptr6) { wasm.__wbindgen_free(ptr6, len6 * 8, 8); }
+        if (ptr5) { wasm.__wbindgen_free(ptr5, len5 * 8, 8); }
         if (ptr4) { wasm.__wbindgen_free(ptr4, len4 * 8, 8); }
         if (ptr3) { wasm.__wbindgen_free(ptr3, len3 * 8, 8); }
         if (ptr2) { wasm.__wbindgen_free(ptr2, len2 * 8, 8); }
@@ -139,7 +264,7 @@ export function train(algorithm, learner, xs, ys, labels, booster, weak, resolut
         if (ptr0) { wasm.__wbindgen_free(ptr0, len0 * 1, 1); }
         throw e;
     }
-    const ret = wasm.train(ptr0, len0, ptr1, len1, ptr2, len2, ptr3, len3, ptr4, len4, booster, weak, val6);
+    const ret = wasm.train(ptr0, len0, ptr1, len1, ptr2, len2, ptr3, len3, ptr4, len4, ptr5, len5, ptr6, len6, ptr7, len7, booster, weak, val9);
     if (ret[2]) {
         throw takeFromExternrefTable0(ret[1]);
     }
@@ -253,9 +378,19 @@ function addToExternrefTable0(obj) {
     return idx;
 }
 
+function getArrayF32FromWasm0(ptr, len) {
+    ptr = ptr >>> 0;
+    return getFloat32ArrayMemory0().subarray(ptr / 4, ptr / 4 + len);
+}
+
 function getArrayF64FromWasm0(ptr, len) {
     ptr = ptr >>> 0;
     return getFloat64ArrayMemory0().subarray(ptr / 8, ptr / 8 + len);
+}
+
+function getArrayU32FromWasm0(ptr, len) {
+    ptr = ptr >>> 0;
+    return getUint32ArrayMemory0().subarray(ptr / 4, ptr / 4 + len);
 }
 
 let cachedDataViewMemory0 = null;
@@ -264,6 +399,14 @@ function getDataViewMemory0() {
         cachedDataViewMemory0 = new DataView(wasm.memory.buffer);
     }
     return cachedDataViewMemory0;
+}
+
+let cachedFloat32ArrayMemory0 = null;
+function getFloat32ArrayMemory0() {
+    if (cachedFloat32ArrayMemory0 === null || cachedFloat32ArrayMemory0.byteLength === 0) {
+        cachedFloat32ArrayMemory0 = new Float32Array(wasm.memory.buffer);
+    }
+    return cachedFloat32ArrayMemory0;
 }
 
 let cachedFloat64ArrayMemory0 = null;
@@ -277,6 +420,14 @@ function getFloat64ArrayMemory0() {
 function getStringFromWasm0(ptr, len) {
     ptr = ptr >>> 0;
     return decodeText(getUint8ArrayMemory0().subarray(ptr, ptr + len));
+}
+
+let cachedUint32ArrayMemory0 = null;
+function getUint32ArrayMemory0() {
+    if (cachedUint32ArrayMemory0 === null || cachedUint32ArrayMemory0.byteLength === 0) {
+        cachedUint32ArrayMemory0 = new Uint32Array(wasm.memory.buffer);
+    }
+    return cachedUint32ArrayMemory0;
 }
 
 let cachedUint8ArrayMemory0 = null;
@@ -385,7 +536,9 @@ function __wbg_finalize_init(instance, module) {
     wasm = instance.exports;
     wasmModule = module;
     cachedDataViewMemory0 = null;
+    cachedFloat32ArrayMemory0 = null;
     cachedFloat64ArrayMemory0 = null;
+    cachedUint32ArrayMemory0 = null;
     cachedUint8ArrayMemory0 = null;
     wasm.__wbindgen_start();
     return wasm;

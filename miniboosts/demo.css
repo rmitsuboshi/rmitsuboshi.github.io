@@ -24,17 +24,20 @@ body {
 
 a { color: var(--navy); }
 h1, h2, h3 { color: var(--navy); }
-h1 { margin: 0; font-size: 34pt; }
+h1 { margin: 0; font-size: 28pt; }
 h2 { margin: 1.6em 0 0.4em; font-size: 20pt; border-bottom: 1px solid var(--line); }
 h3 { margin: 1em 0 0.3em; font-size: 13pt; }
 
 .crumbs { font-size: 0.9em; }
 
-.hero { margin-top: 12px; }
-.tagline { margin: 0.2em 0 0.8em; font-size: 1.2em; }
+.hero { margin-top: 8px; }
+.tagline { margin: 0.1em 0 0.6em; font-size: 1.1em; }
 .links { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.links a:last-child { margin-left: 8px; }
-.badges { margin: 10px 0 0; display: flex; gap: 6px; flex-wrap: wrap; }
+.badges { display: inline-flex; gap: 6px; flex-wrap: wrap; margin-left: 8px; }
+
+/* The playground comes right after the header. */
+.playground h2 { margin-top: 0.9em; }
+.playground .intro { margin: 0 0 10px; font-size: 0.92em; color: var(--muted); }
 
 a.button {
     display: inline-block;
@@ -61,9 +64,24 @@ pre {
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .two-col > div { min-width: 0; }
 
-table { border-collapse: collapse; width: 100%; font-size: 0.92em; }
-td { padding: 3px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
-td:first-child { white-space: nowrap; font-weight: 700; }
+.algo-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr));
+    gap: 0 24px;
+    font-size: 0.92em;
+}
+.algo-grid li {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    padding: 3px 0;
+    border-bottom: 1px solid var(--line);
+}
+.algo-grid .algo { font-weight: 700; white-space: nowrap; }
+.algo-grid a { text-align: right; }
 
 footer { margin: 32px 0 8px; text-align: center; }
 
@@ -89,6 +107,45 @@ canvas#canvas {
 }
 
 .hint, .muted { color: var(--muted); font-size: 0.9em; }
+fieldset .hint { margin: 6px 0 0; font-size: 0.82em; line-height: 1.4; }
+#timelineNote { margin: 4px 0 0; font-size: 0.82em; line-height: 1.4; }
+
+/* ---------------------------------------------------------------- timeline */
+
+.timeline { max-width: 600px; margin-top: 4px; }
+.timeline[hidden] { display: none; }
+.slider-row { display: flex; align-items: center; gap: 10px; }
+.slider-row input[type="range"] { flex: 1; accent-color: var(--navy); }
+.slider-row button { width: 36px; padding: 4px 0; }
+.round-label { min-width: 7.5em; text-align: right; font-variant-numeric: tabular-nums; }
+.weights { font-size: 0.9em; white-space: nowrap; }
+.chart-head { display: flex; flex-wrap: wrap-reverse; align-items: center; justify-content: space-between; gap: 6px 12px; margin-top: 10px; }
+.chart-head h3 { margin: 0; flex: 1 1 100%; font-size: 11pt; }
+.chart-head select { width: auto; }
+.legend { display: inline-flex; gap: 14px; font-size: 0.85em; color: var(--muted); }
+.legend[hidden] { display: none; }
+.swatch { display: inline-block; width: 22px; height: 0; margin-right: 6px; vertical-align: middle; border-top: 2px solid var(--train-color, #000080); }
+.swatch.test { border-top-color: var(--test-color, #0f7d6b); }
+.chart-wrap { position: relative; }
+#lossChart {
+    display: block;
+    width: 100%;
+    height: 220px;
+    cursor: crosshair;
+    touch-action: none;
+}
+.chart-tip {
+    position: absolute;
+    pointer-events: none;
+    padding: 4px 8px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    font-size: 0.85em;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
 
 .panel {
     flex: 1 1 300px;
@@ -159,6 +216,46 @@ select { width: 100%; padding: 4px; }
 .row { display: flex; gap: 6px; margin-top: 8px; align-items: center; flex-wrap: wrap; }
 
 .classes { gap: 14px; font-weight: 700; }
+.classes .split { display: inline-flex; gap: 10px; margin-left: auto; font-weight: 400; }
+.view-row { justify-content: space-between; font-size: 0.9em; }
+.view-row select { width: auto; margin-left: 6px; }
+
+/* Cyberpunk: crisp neon accents on the light page. */
+.playground[data-theme="cyberpunk"] canvas#canvas {
+    border-color: rgba(122, 0, 255, 0.45);
+    box-shadow: 0 0 14px rgba(122, 0, 255, 0.14);
+}
+.playground[data-theme="cyberpunk"] .board h3 { color: #7a00ff; }
+.playground[data-theme="cyberpunk"] .slider-row input[type="range"] { accent-color: #7a00ff; }
+.playground[data-theme="cyberpunk"] .presets canvas { border-color: rgba(122, 0, 255, 0.3); }
+
+/* Cyberpunk (dark): the board (plot, slider, loss chart) on a dark panel
+   with neon accents; the controls keep the page style. */
+.playground[data-theme="cyberpunk-dark"] .board {
+    background: #0a0b1a;
+    color: #d6d9f5;
+    padding: 10px;
+    border-radius: 6px;
+    box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.25), 0 0 18px rgba(185, 103, 255, 0.18);
+}
+.playground[data-theme="cyberpunk-dark"] canvas#canvas { border-color: rgba(0, 240, 255, 0.35); }
+.playground[data-theme="cyberpunk-dark"] .board h3 { color: #f9f871; }
+.playground[data-theme="cyberpunk-dark"] .board .muted,
+.playground[data-theme="cyberpunk-dark"] .board .legend,
+.playground[data-theme="cyberpunk-dark"] #timelineNote { color: #8b90b8; }
+.playground[data-theme="cyberpunk-dark"] .slider-row input[type="range"] { accent-color: #f9f871; }
+.playground[data-theme="cyberpunk-dark"] .board button,
+.playground[data-theme="cyberpunk-dark"] .board select {
+    background: #14162e;
+    color: #d6d9f5;
+    border-color: rgba(0, 240, 255, 0.4);
+}
+.playground[data-theme="cyberpunk-dark"] .chart-tip {
+    background: #14162e;
+    color: #d6d9f5;
+    border-color: rgba(0, 240, 255, 0.4);
+}
+.playground[data-theme="cyberpunk-dark"] .presets canvas { background: #0a0b1a; border-color: rgba(0, 240, 255, 0.3); }
 .classes .muted { font-weight: 400; }
 .classes .pos { color: var(--pos); }
 .classes .neg { color: var(--neg); }
@@ -172,7 +269,7 @@ select { width: 100%; padding: 4px; }
 }
 p.lparam { display: block; margin: 8px 0 0; }
 .param input, .lparam input { width: 90px; padding: 2px 4px; }
-.lparam select { width: auto; }
+.param select, .lparam select { width: auto; }
 .param[hidden], .lparam[hidden] { display: none; }
 
 button {
@@ -204,6 +301,27 @@ button.primary {
 }
 .status.error { border-left-color: #c0392b; color: #8e2a1f; }
 .status.ok { border-left-color: var(--navy); }
+
+/* Fit the playground in one laptop screen: the board's side follows the
+   viewport height, leaving room for the slider and the loss chart. */
+#playground { scroll-margin-top: 8px; }
+@media (min-width: 761px) {
+    /* Fits once the "Playground" heading is scrolled to the top: the
+       heading and intro take about 75 px above the board. */
+    .board { flex: 0 0 auto; width: min(600px, max(300px, calc(100vh - 385px))); }
+    #lossChart { height: clamp(110px, 17vh, 220px); }
+}
+/* Wide screens: presets in one row, algorithm and weak learner side by side. */
+@media (min-width: 1100px) {
+    .panel {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+        gap: 10px;
+    }
+    .panel > fieldset:first-child, .panel > .actions, .panel > .status { grid-column: 1 / -1; }
+    .presets { grid-template-columns: repeat(8, 1fr); }
+}
 
 @media (max-width: 760px) {
     h1 { font-size: 26pt; }

@@ -19,89 +19,52 @@
                 <a class="button" href="https://crates.io/crates/miniboosts">crates.io</a>
                 <a class="button" href="https://docs.rs/miniboosts">docs.rs</a>
                 <a class="button" href="https://github.com/rmitsuboshi/miniboosts/blob/main/python/README.md">Python bindings</a>
-                <a href="#playground">Try it in your browser &darr;</a>
+                <span class="badges">
+                    <a href="https://crates.io/crates/miniboosts"><img src="https://img.shields.io/crates/v/miniboosts" alt="crates.io version" height="20"></a>
+                    <a href="https://docs.rs/miniboosts"><img src="https://img.shields.io/docsrs/miniboosts" alt="docs.rs status" height="20"></a>
+                    <a href="https://github.com/rmitsuboshi/miniboosts/blob/main/LICENSE"><img src="https://img.shields.io/crates/l/miniboosts" alt="license" height="20"></a>
+                </span>
             </div>
-            <p class="badges">
-                <a href="https://crates.io/crates/miniboosts"><img src="https://img.shields.io/crates/v/miniboosts" alt="crates.io version" height="20"></a>
-                <a href="https://docs.rs/miniboosts"><img src="https://img.shields.io/docsrs/miniboosts" alt="docs.rs status" height="20"></a>
-                <a href="https://github.com/rmitsuboshi/miniboosts/blob/main/LICENSE"><img src="https://img.shields.io/crates/l/miniboosts" alt="license" height="20"></a>
-            </p>
         </header>
 
-        <section class="overview">
-            <h2>Overview</h2>
-            <p>
-                MiniBoosts collects boosting algorithms behind shared
-                <code>Booster</code>, <code>WeakLearner</code>, and <code>Classifier</code> traits,
-                so the same data and weak learner can be used across experiments for fair comparisons.
-                Linear, quadratic, and conic subproblems are solved with
-                <a href="https://clarabel.org/">Clarabel</a>; no commercial solver is required.
-                Optional Python bindings expose the same algorithms with a scikit-learn-style API.
-            </p>
-
-            <div class="two-col">
-                <div>
-                    <h3>Install</h3>
-<pre><code>cargo add miniboosts</code></pre>
-                    <h3>Example</h3>
-<pre><code>use miniboosts::prelude::*;
-
-let sample = SampleReader::default()
-    .file("train.csv")
-    .has_header(true)
-    .target_feature("class")
-    .read()
-    .unwrap();
-let tree = DecisionTreeBuilder::new(&amp;sample)
-    .max_depth(2)
-    .build();
-let f = LpBoost::init(&amp;sample)
-    .nu(0.1 * sample.shape().0 as f64)
-    .run(&amp;tree);
-let predictions = f.predict_all(&amp;sample);</code></pre>
-                </div>
-                <div>
-                    <h3>Algorithms</h3>
-                    <table>
-                        <tbody>
-                            <tr><td>AdaBoost</td><td><a href="https://www.sciencedirect.com/science/article/pii/S002200009791504X">Freund and Schapire</a></td></tr>
-                            <tr><td>BrownBoost</td><td><a href="https://doi.org/10.1023/A:1010852229904">Freund</a></td></tr>
-                            <tr><td>AdaBoostV</td><td><a href="http://jmlr.org/papers/v6/ratsch05a.html">R&auml;tsch and Warmuth</a></td></tr>
-                            <tr><td>MadaBoost</td><td><a href="https://www.learningtheory.org/colt2000/papers/DomingoWatanabe.pdf">Domingo and Watanabe</a></td></tr>
-                            <tr><td>SmoothBoost</td><td><a href="https://link.springer.com/chapter/10.1007/3-540-44581-1_31">Servedio</a></td></tr>
-                            <tr><td>LPBoost</td><td><a href="https://link.springer.com/content/pdf/10.1023/A:1012470815092.pdf">Demiriz, Bennett, and Shawe-Taylor</a></td></tr>
-                            <tr><td>ERLPBoost</td><td><a href="https://www.stat.purdue.edu/~vishy/papers/WarGloVis08.pdf">Warmuth, Glocer, and Vishwanathan</a></td></tr>
-                            <tr><td>Corrective ERLPBoost</td><td><a href="https://link.springer.com/article/10.1007/s10994-010-5173-z">Shalev-Shwartz and Singer</a></td></tr>
-                            <tr><td>MLPBoost</td><td><a href="https://arxiv.org/abs/2209.10831">Mitsuboshi, Hatano, and Takimoto</a></td></tr>
-                            <tr><td>SoftBoost</td><td><a href="https://proceedings.neurips.cc/paper/2007/file/cfbce4c1d7c425baf21d6b6f2babe6be-Paper.pdf">Warmuth, Glocer, and R&auml;tsch</a></td></tr>
-                            <tr><td>TotalBoost</td><td><a href="https://dl.acm.org/doi/10.1145/1143844.1143970">Warmuth, Liao, and R&auml;tsch</a></td></tr>
-                            <tr><td>Graph Separation Boosting</td><td><a href="https://theoretics.episciences.org/10757">Alon, Gonen, Hazan, and Moran</a></td></tr>
-                            <tr><td>SparsiBoost</td><td><a href="https://arxiv.org/abs/1901.10789">Gr&oslash;nlund, Larsen, and Mathiasen</a></td></tr>
-                        </tbody>
-                    </table>
-                    <p class="muted">Built-in weak learners: decision trees, logistic regression, bounded linear functions, Gaussian naive Bayes, and Gaussian RBF bumps. Any type implementing <code>WeakLearner</code> can be used instead.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="playground" class="playground">
+        <section id="playground" class="playground" data-theme="cyberpunk">
             <h2>Playground</h2>
-            <p>
-                Place points, choose an algorithm, and see the decision boundary.
-                Training runs entirely in your browser: MiniBoosts is compiled to WebAssembly.
-                Shading shows the ensemble's confidence (relative to its largest value on the plane);
-                the black line is where the confidence is zero.
+            <p class="intro">
+                Place points, pick a booster and a weak learner, and press Run. Everything runs in your
+                browser: MiniBoosts is compiled to WebAssembly.
             </p>
 
             <div class="demo">
                 <div class="board">
                     <canvas id="canvas" width="600" height="600"
                             aria-label="Drawing area: click to add points"></canvas>
-                    <p class="hint">
-                        Click: add a point of the selected class.
-                        Shift-click or right-click: add the other class.
-                        Alt-click: remove the nearest point.
-                    </p>
+                    <div id="timeline" class="timeline" hidden>
+                        <div class="slider-row">
+                            <button id="play" type="button" aria-label="Play">&#9654;</button>
+                            <input id="round" type="range" min="0" max="0" step="1" value="0" aria-label="Round">
+                            <span id="roundLabel" class="round-label"></span>
+                        </div>
+                        <div class="chart-head">
+                            <h3 id="lossTitle">Training loss</h3>
+                            <span id="lossLegend" class="legend" hidden>
+                                <span><i class="swatch train"></i>train</span>
+                                <span><i class="swatch test"></i>test</span>
+                            </span>
+                            <select id="lossKind" aria-label="Loss">
+                                <option value="error">0-1 error</option>
+                                <option value="objective" id="objectiveOption">Algorithm&rsquo;s objective</option>
+                            </select>
+                            <label class="weights" title="Draw each point with area proportional to its weight in the shown round">
+                                <input id="showWeights" type="checkbox" checked>
+                                Point size = weight
+                            </label>
+                        </div>
+                        <div class="chart-wrap">
+                            <canvas id="lossChart" aria-label="Training loss by round"></canvas>
+                            <div id="lossTip" class="chart-tip" hidden></div>
+                        </div>
+                        <p id="timelineNote" class="muted"></p>
+                    </div>
                 </div>
 
                 <div class="panel">
@@ -117,8 +80,32 @@ let predictions = f.predict_all(&amp;sample);</code></pre>
                             <span class="muted">New points:</span>
                             <label class="pos"><input type="radio" name="cls" value="1" checked> +1 &#9679;</label>
                             <label class="neg"><input type="radio" name="cls" value="-1"> &minus;1 &#9632;</label>
+                            <span class="split" role="radiogroup" aria-label="Train or test">
+                                <label title="Used for training (filled marker)"><input type="radio" name="split" value="train" checked> train</label>
+                                <label title="Held out for the test error (hollow marker)"><input type="radio" name="split" value="test"> test</label>
+                            </span>
+                        </div>
+                        <div class="row view-row">
+                            <label title="Test points are always used for the test error; this only shows them">
+                                <input id="showTest" type="checkbox"> Show test points
+                            </label>
+                            <label class="theme-pick">
+                                Theme
+                                <select id="theme" aria-label="Color theme">
+                                    <option value="cyberpunk">Cyberpunk</option>
+                                    <option value="cyberpunk-dark">Cyberpunk (dark)</option>
+                                    <option value="classic">Classic</option>
+                                </select>
+                            </label>
                         </div>
                         <p id="count" class="muted"></p>
+                        <p class="hint">
+                            Shading shows the ensemble&rsquo;s confidence; the line is the decision
+                            boundary. Filled markers are training points, hollow ones test points.
+                            Click the plot to add a point of the selected class;
+                            shift-click or right-click adds the other class,
+                            alt-click removes the nearest point.
+                        </p>
                     </fieldset>
 
                     <fieldset>
@@ -126,13 +113,18 @@ let predictions = f.predict_all(&amp;sample);</code></pre>
                         <select id="algorithm" aria-label="Boosting algorithm">
                             <option value="adaboost">AdaBoost</option>
                             <option value="adaboostv">AdaBoostV</option>
+                            <option value="arcgv">Arc-gv</option>
+                            <option value="bbm">Boost-by-Majority</option>
                             <option value="brownboost">BrownBoost</option>
                             <option value="corrective_erlpboost">Corrective ERLPBoost</option>
                             <option value="erlpboost">ERLPBoost</option>
+                            <option value="gradient_boosting">Gradient Boosting</option>
                             <option value="graph_separation">Graph Separation Boosting</option>
+                            <option value="logitboost">LogitBoost</option>
                             <option value="lpboost">LPBoost</option>
                             <option value="madaboost">MadaBoost</option>
                             <option value="mlpboost">MLPBoost</option>
+                            <option value="robustboost">RobustBoost</option>
                             <option value="smoothboost">SmoothBoost</option>
                             <option value="softboost">SoftBoost</option>
                             <option value="sparsiboost">SparsiBoost</option>
@@ -160,6 +152,35 @@ let predictions = f.predict_all(&amp;sample);</code></pre>
                         <label class="param" data-for="sparsi" title="Target gap v; AdaBoostV runs ⌈8 ln m / v²⌉ rounds. Leave empty to use only T">
                             Target gap v <input id="gap" type="number" min="0.05" step="0.05" placeholder="none">
                         </label>
+                        <label class="param" data-for="bbm" title="Assumed advantage γ: every weak hypothesis has weighted error at most 1/2 − γ">
+                            Advantage &gamma; <input id="bbmGamma" type="number" min="0.01" max="0.49" step="0.01" value="0.1">
+                        </label>
+                        <label class="param" data-for="bbm" title="Target training error ε; sets the number of rounds k = ⌈ln(1/ε) / (2γ²)⌉">
+                            Target error &epsilon; <input id="bbmTolerance" type="number" min="0.001" max="0.99" step="0.01" value="0.01">
+                        </label>
+                        <label class="param" data-for="robust" title="Error goal ε">
+                            Error goal &epsilon; <input id="robustTolerance" type="number" min="0.01" max="0.99" step="0.01" value="0.1">
+                        </label>
+                        <label class="param" data-for="robust" title="Goal margin θ ≥ 0">
+                            Goal margin &theta; <input id="robustTheta" type="number" min="0" max="0.99" step="0.05" value="0">
+                        </label>
+                        <label class="param" data-for="robust" title="Final width σ_f > 0">
+                            Final width &sigma;<sub>f</sub> <input id="robustSigma" type="number" min="0.01" step="0.05" value="0.1">
+                        </label>
+                        <label class="param" data-for="gbm">
+                            Loss
+                            <select id="gbmLoss">
+                                <option value="logistic">Logistic (deviance)</option>
+                                <option value="exponential">Exponential</option>
+                                <option value="squared">Squared</option>
+                            </select>
+                        </label>
+                        <label class="param" data-for="gbm" title="Shrinkage ν in (0, 1]; Friedman recommends small values such as 0.1">
+                            Shrinkage &nu; <input id="shrinkage" type="number" min="0.01" max="1" step="0.05" value="0.1">
+                        </label>
+                        <label class="param" data-for="logit" title="Clipping bound z_max ≥ 1 of the working response">
+                            Response bound z<sub>max</sub> <input id="maxResponse" type="number" min="1" step="0.5" value="4">
+                        </label>
                         <label class="param" data-for="brown" title="Target training error ε; sets the total time c with 1 − erf(√c) = ε">
                             Target error &epsilon; <input id="brownTolerance" type="number" min="0.01" max="0.99" step="0.01" value="0.1">
                         </label>
@@ -176,9 +197,10 @@ let predictions = f.predict_all(&amp;sample);</code></pre>
                             <option value="bounded_linear">Bounded linear</option>
                             <option value="naive_bayes">Gaussian naive Bayes</option>
                             <option value="rbf">RBF bumps</option>
+                            <option value="regression_tree">Regression tree</option>
                         </select>
 
-                        <label class="lparam" data-learner="decision_tree">
+                        <label class="lparam" data-learner="decision_tree regression_tree">
                             Depth <input id="maxDepth" type="number" min="1" max="10" step="1" value="2">
                         </label>
                         <label class="lparam" data-learner="decision_tree">
@@ -213,6 +235,10 @@ let predictions = f.predict_all(&amp;sample);</code></pre>
                         <p class="lparam muted" data-learner="logistic_regression">
                             Fits a weighted logistic loss; no edge guarantee.
                         </p>
+                        <p class="lparam muted" data-learner="regression_tree">
+                            Least-squares regression tree, used by gradient boosting and LogitBoost
+                            (which fit real-valued responses).
+                        </p>
                         <p class="lparam muted" data-learner="rbf">
                             One bump &plusmn;k<sub>c</sub> per training point; returns the bump with the largest edge.
                         </p>
@@ -227,6 +253,71 @@ let predictions = f.predict_all(&amp;sample);</code></pre>
                     <div id="status" class="status" aria-live="polite">Add points of both classes, then press Run.</div>
                 </div>
             </div>
+        </section>
+
+        <section class="overview">
+            <h2>Overview</h2>
+            <p>
+                MiniBoosts collects boosting algorithms behind shared
+                <code>Booster</code>, <code>WeakLearner</code>, and <code>Classifier</code> traits,
+                so the same data and weak learner can be used across experiments for fair comparisons.
+                Linear, quadratic, and conic subproblems are solved with
+                <a href="https://clarabel.org/">Clarabel</a>; no commercial solver is required.
+                Optional Python bindings expose the same algorithms with a scikit-learn-style API.
+            </p>
+
+            <div class="two-col">
+                <div>
+                    <h3>Install</h3>
+<pre><code>cargo add miniboosts</code></pre>
+                    <h3>Weak learners</h3>
+                    <p>
+                        Decision trees, logistic regression, bounded linear functions, Gaussian naive Bayes,
+                        Gaussian RBF bumps, and regression trees. Any type implementing
+                        <code>WeakLearner</code> can be used instead.
+                    </p>
+                </div>
+                <div>
+                    <h3>Example</h3>
+<pre><code>use miniboosts::prelude::*;
+
+let sample = SampleReader::default()
+    .file("train.csv")
+    .has_header(true)
+    .target_feature("class")
+    .read()
+    .unwrap();
+let tree = DecisionTreeBuilder::new(&amp;sample)
+    .max_depth(2)
+    .build();
+let f = LpBoost::init(&amp;sample)
+    .nu(0.1 * sample.shape().0 as f64)
+    .run(&amp;tree);
+let predictions = f.predict_all(&amp;sample);</code></pre>
+                </div>
+            </div>
+
+            <h3>Algorithms</h3>
+            <ul class="algo-grid">
+                <li><span class="algo">AdaBoost</span><a href="https://www.sciencedirect.com/science/article/pii/S002200009791504X">Freund and Schapire</a></li>
+                <li><span class="algo">AdaBoostV</span><a href="http://jmlr.org/papers/v6/ratsch05a.html">R&auml;tsch and Warmuth</a></li>
+                <li><span class="algo">Arc-gv</span><a href="https://doi.org/10.1162/089976699300016106">Breiman</a></li>
+                <li><span class="algo">Boost-by-Majority</span><a href="https://doi.org/10.1006/inco.1995.1136">Freund</a></li>
+                <li><span class="algo">BrownBoost</span><a href="https://doi.org/10.1023/A:1010852229904">Freund</a></li>
+                <li><span class="algo">Corrective ERLPBoost</span><a href="https://link.springer.com/article/10.1007/s10994-010-5173-z">Shalev-Shwartz and Singer</a></li>
+                <li><span class="algo">ERLPBoost</span><a href="https://www.stat.purdue.edu/~vishy/papers/WarGloVis08.pdf">Warmuth, Glocer, and Vishwanathan</a></li>
+                <li><span class="algo">Gradient Boosting</span><a href="https://doi.org/10.1214/aos/1013203451">Friedman</a></li>
+                <li><span class="algo">Graph Separation Boosting</span><a href="https://theoretics.episciences.org/10757">Alon, Gonen, Hazan, and Moran</a></li>
+                <li><span class="algo">LogitBoost</span><a href="https://doi.org/10.1214/aos/1016218223">Friedman, Hastie, and Tibshirani</a></li>
+                <li><span class="algo">LPBoost</span><a href="https://link.springer.com/content/pdf/10.1023/A:1012470815092.pdf">Demiriz, Bennett, and Shawe-Taylor</a></li>
+                <li><span class="algo">MadaBoost</span><a href="https://www.learningtheory.org/colt2000/papers/DomingoWatanabe.pdf">Domingo and Watanabe</a></li>
+                <li><span class="algo">MLPBoost</span><a href="https://arxiv.org/abs/2209.10831">Mitsuboshi, Hatano, and Takimoto</a></li>
+                <li><span class="algo">RobustBoost</span><a href="https://arxiv.org/abs/0905.2138">Freund</a></li>
+                <li><span class="algo">SmoothBoost</span><a href="https://link.springer.com/chapter/10.1007/3-540-44581-1_31">Servedio</a></li>
+                <li><span class="algo">SoftBoost</span><a href="https://proceedings.neurips.cc/paper/2007/file/cfbce4c1d7c425baf21d6b6f2babe6be-Paper.pdf">Warmuth, Glocer, and R&auml;tsch</a></li>
+                <li><span class="algo">SparsiBoost</span><a href="https://arxiv.org/abs/1901.10789">Gr&oslash;nlund, Larsen, and Mathiasen</a></li>
+                <li><span class="algo">TotalBoost</span><a href="https://dl.acm.org/doi/10.1145/1143844.1143970">Warmuth, Liao, and R&auml;tsch</a></li>
+            </ul>
         </section>
 
         <footer class="muted">
