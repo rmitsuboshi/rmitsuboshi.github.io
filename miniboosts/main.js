@@ -909,6 +909,7 @@ function showTimeline(algorithm, params) {
     $('round').value = last;
     $('round').disabled = last === 0;
     $('play').disabled = last === 0;
+    $('saveGif').disabled = last === 0;
     $('timeline').hidden = false;
     timeline.objective = objectiveInfo(algorithm, params);
     const option = $('objectiveOption');
@@ -949,7 +950,7 @@ $('round').addEventListener('input', (e) => {
     setFrame(Number(e.target.value));
 });
 $('showWeights').addEventListener('change', draw);
-$('lossKind').addEventListener('change', drawLossChart);
+$('lossKind').addEventListener('change', () => drawLossChart());
 
 function stopPlaying() {
     cancelAnimationFrame(playTimer);
@@ -1109,8 +1110,7 @@ const PAD = { left: 52, right: 14, top: 10, bottom: 30 };
 // The plotted series: [{ name, values, color }].
 let chartSeries = [];
 
-function chartGeometry() {
-    const rect = chart.getBoundingClientRect();
+function chartGeometry(rect = chart.getBoundingClientRect()) {
     const rounds = timeline.curve.map((p) => p.round);
     const x0 = Math.min(...rounds);
     const x1 = Math.max(...rounds);
@@ -1119,14 +1119,16 @@ function chartGeometry() {
     return { rect, x0, x1, xOf };
 }
 
-function drawLossChart() {
+// Draws on the page's chart, or on `target` at `size` ({ width, height }) for
+// the GIF export.
+function drawLossChart(target = chart, size = null) {
     if (!timeline || $('timeline').hidden) return;
-    const dpr = window.devicePixelRatio || 1;
-    const { rect, x0, x1, xOf } = chartGeometry();
+    const dpr = size ? 1 : window.devicePixelRatio || 1;
+    const { rect, x0, x1, xOf } = chartGeometry(size ?? undefined);
     if (rect.width === 0) return;
-    chart.width = Math.round(rect.width * dpr);
-    chart.height = Math.round(rect.height * dpr);
-    const c = chart.getContext('2d');
+    target.width = Math.round(rect.width * dpr);
+    target.height = Math.round(rect.height * dpr);
+    const c = target.getContext('2d');
     const colors = theme.chart;
     c.setTransform(dpr, 0, 0, dpr, 0, 0);
     c.clearRect(0, 0, rect.width, rect.height);
@@ -1343,7 +1345,109 @@ chart.addEventListener('click', (e) => {
     stopPlaying();
     setFrame(nearestIndex(timeline.frames, roundAtPointer(e)));
 });
-new ResizeObserver(drawLossChart).observe(chart);
+new ResizeObserver(() => drawLossChart()).observe(chart);
+
+// ---------------------------------------------------------------- GIF export
+
+const GIF_LAYOUT = { pad: 12, header: 34, board: 400, gap: 16, chartWidth: 440, chartTitle: 24 };
+const GIF_HOLD_MILLIS = 2500; // pause on the last frame before looping
+
+// Draws the decision boundary and the loss chart of the shown frame side by
+// side. The plot is copied from the page's canvas, so it honors the theme and
+// the page's options; the chart is drawn anew at the GIF's size.
+function composeGifFrame(context, chartCanvas) {
+    const { pad, header, board, gap, chartWidth, chartTitle } = GIF_LAYOUT;
+    const { width, height } = context.canvas;
+    const colors = theme.chart;
+    context.fillStyle = colors.background ?? '#fff';
+    context.fillRect(0, 0, width, height);
+    context.imageSmoothingQuality = 'high';
+    context.drawImage(canvas, pad, header, board, board);
+
+    const selected = (id) => $(id).selectedOptions[0].textContent.trim();
+    const chartX = pad + board + gap;
+    context.fillStyle = colors.label;
+    context.textBaseline = 'middle';
+    context.textAlign = 'left';
+    context.font = 'bold 15px Play, sans-serif';
+    context.fillText(`${selected('algorithm')} + ${selected('learner')}`, pad, header / 2);
+    context.textAlign = 'right';
+    context.font = '13px Play, sans-serif';
+    context.fillText($('roundLabel').textContent, width - pad, header / 2);
+    context.textAlign = 'left';
+    context.fillText($('lossTitle').textContent, chartX, header + chartTitle / 2);
+
+    drawLossChart(chartCanvas, { width: chartWidth, height: board - chartTitle });
+    context.drawImage(chartCanvas, chartX, header + chartTitle);
+}
+
+async function saveGif() {
+    const run = timeline;
+    const button = $('saveGif');
+    const shownFrame = frameIndex;
+    const last = run.frames.length - 1;
+    const stillCurrent = () => timeline === run;
+    stopPlaying();
+    drawLossChart();
+    for (const id of ['saveGif', 'play', 'round']) $(id).disabled = true;
+    try {
+        const { GIFEncoder, quantize, applyPalette } = await import('./gifenc/gifenc.esm.js');
+        const { pad, header, board, gap, chartWidth } = GIF_LAYOUT;
+        const out = document.createElement('canvas');
+        out.width = pad + board + gap + chartWidth + pad;
+        out.height = header + board + pad;
+        const context = out.getContext('2d', { willReadFrequently: true });
+        const chartCanvas = document.createElement('canvas');
+        const render = (index) => {
+            setFrame(index);
+            composeGifFrame(context, chartCanvas);
+            return context.getImageData(0, 0, out.width, out.height).data;
+        };
+
+        // One palette for all frames, from frames across the run.
+        const samples = [0, last >> 1, last].map(render);
+        const pixels = new Uint8ClampedArray(samples.reduce((n, s) => n + s.length, 0));
+        samples.reduce((offset, s) => (pixels.set(s, offset), offset + s.length), 0);
+        const palette = quantize(pixels, 256);
+
+        // Same pace as the Play button: time is proportional to rounds.
+        const span = run.frames[last].round - run.frames[0].round;
+        const encoder = GIFEncoder();
+        for (let k = 0; k <= last; k++) {
+            if (!stillCurrent()) return;
+            const rounds = k < last ? run.frames[k + 1].round - run.frames[k].round : 0;
+            const delay = k < last
+                ? Math.max(20, Math.round((PLAY_MILLIS * rounds) / span / 10) * 10)
+                : GIF_HOLD_MILLIS;
+            const rgba = render(k);
+            encoder.writeFrame(applyPalette(rgba, palette), out.width, out.height, {
+                palette: k === 0 ? palette : undefined,
+                delay,
+            });
+            button.textContent = `${Math.round((100 * (k + 1)) / (last + 1))}%`;
+            // Keep the page responsive and the progress visible.
+            await new Promise((resolve) => setTimeout(resolve));
+        }
+        encoder.finish();
+
+        const url = URL.createObjectURL(new Blob([encoder.bytes()], { type: 'image/gif' }));
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `miniboosts-${$('algorithm').value}.gif`;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+    } catch (error) {
+        setStatus(`Could not save the GIF: ${escapeHtml(String(error))}`, 'error');
+    } finally {
+        button.textContent = 'GIF';
+        // A new run or an edit replaces the timeline and sets these itself.
+        if (stillCurrent()) {
+            setFrame(shownFrame);
+            for (const id of ['saveGif', 'play', 'round']) $(id).disabled = false;
+        }
+    }
+}
+$('saveGif').addEventListener('click', saveGif);
 
 startWorker();
 applyTheme(storedTheme);

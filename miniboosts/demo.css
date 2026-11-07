@@ -117,6 +117,7 @@ fieldset .hint { margin: 6px 0 0; font-size: 0.82em; line-height: 1.4; }
 .slider-row { display: flex; align-items: center; gap: 10px; }
 .slider-row input[type="range"] { flex: 1; accent-color: var(--navy); }
 .slider-row button { width: 36px; padding: 4px 0; }
+.slider-row #saveGif { width: 46px; font-variant-numeric: tabular-nums; }
 .round-label { min-width: 7.5em; text-align: right; font-variant-numeric: tabular-nums; }
 .weights { font-size: 0.9em; white-space: nowrap; }
 .chart-head { display: flex; flex-wrap: wrap-reverse; align-items: center; justify-content: space-between; gap: 6px 12px; margin-top: 10px; }
