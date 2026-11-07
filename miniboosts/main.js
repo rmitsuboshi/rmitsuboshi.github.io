@@ -1349,14 +1349,14 @@ new ResizeObserver(() => drawLossChart()).observe(chart);
 
 // ---------------------------------------------------------------- GIF export
 
-const GIF_LAYOUT = { pad: 12, header: 34, board: 400, gap: 16, chartWidth: 440, chartTitle: 24 };
+const GIF_LAYOUT = { pad: 12, header: 34, board: 440, chartTitle: 26, chartHeight: 130 };
 const GIF_HOLD_MILLIS = 2500; // pause on the last frame before looping
 
-// Draws the decision boundary and the loss chart of the shown frame side by
-// side. The plot is copied from the page's canvas, so it honors the theme and
-// the page's options; the chart is drawn anew at the GIF's size.
+// Draws the decision boundary of the shown frame with the loss chart below it,
+// as on the page. The plot is copied from the page's canvas, so it honors the
+// theme and the page's options; the chart is drawn anew at the GIF's size.
 function composeGifFrame(context, chartCanvas) {
-    const { pad, header, board, gap, chartWidth, chartTitle } = GIF_LAYOUT;
+    const { pad, header, board, chartTitle, chartHeight } = GIF_LAYOUT;
     const { width, height } = context.canvas;
     const colors = theme.chart;
     context.fillStyle = colors.background ?? '#fff';
@@ -1365,20 +1365,19 @@ function composeGifFrame(context, chartCanvas) {
     context.drawImage(canvas, pad, header, board, board);
 
     const selected = (id) => $(id).selectedOptions[0].textContent.trim();
-    const chartX = pad + board + gap;
+    const titleY = header + board + chartTitle / 2 + 2;
     context.fillStyle = colors.label;
     context.textBaseline = 'middle';
     context.textAlign = 'left';
     context.font = 'bold 15px Play, sans-serif';
     context.fillText(`${selected('algorithm')} + ${selected('learner')}`, pad, header / 2);
-    context.textAlign = 'right';
     context.font = '13px Play, sans-serif';
-    context.fillText($('roundLabel').textContent, width - pad, header / 2);
-    context.textAlign = 'left';
-    context.fillText($('lossTitle').textContent, chartX, header + chartTitle / 2);
+    context.fillText($('lossTitle').textContent, pad, titleY);
+    context.textAlign = 'right';
+    context.fillText($('roundLabel').textContent, width - pad, titleY);
 
-    drawLossChart(chartCanvas, { width: chartWidth, height: board - chartTitle });
-    context.drawImage(chartCanvas, chartX, header + chartTitle);
+    drawLossChart(chartCanvas, { width: board, height: chartHeight });
+    context.drawImage(chartCanvas, pad, header + board + chartTitle);
 }
 
 async function saveGif() {
@@ -1392,10 +1391,10 @@ async function saveGif() {
     for (const id of ['saveGif', 'play', 'round']) $(id).disabled = true;
     try {
         const { GIFEncoder, quantize, applyPalette } = await import('./gifenc/gifenc.esm.js');
-        const { pad, header, board, gap, chartWidth } = GIF_LAYOUT;
+        const { pad, header, board, chartTitle, chartHeight } = GIF_LAYOUT;
         const out = document.createElement('canvas');
-        out.width = pad + board + gap + chartWidth + pad;
-        out.height = header + board + pad;
+        out.width = pad + board + pad;
+        out.height = header + board + chartTitle + chartHeight + pad;
         const context = out.getContext('2d', { willReadFrequently: true });
         const chartCanvas = document.createElement('canvas');
         const render = (index) => {
