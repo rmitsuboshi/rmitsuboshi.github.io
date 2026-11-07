@@ -216,10 +216,14 @@ export function start() {
  * `nu` (capping, `1 ≤ nu ≤ n`), `gamma` and `kappa` (SmoothBoost),
  * `nHypotheses` (`T`, `0` for none) and `gap` (`v`, NaN for none) for
  * SparsiBoost, and `brownTolerance` (`ε`) and `edgeThreshold` (`ν`) for
- * BrownBoost. `weak` holds the learner parameters: `maxDepth` and `splitBy`
- * (decision tree), `regularization` and `output` (logistic regression),
- * `varSmoothing` (naive Bayes), and `bandwidth` (RBF). Only the parameters
- * of the chosen booster and learner are read.
+ * BrownBoost, and `nParts` (Majority-of-5), `maxSubsamples` (Larsen–Ritzert,
+ * `0` for all), and `subsampleSeed` for the sub-sample majorities, which run
+ * AdaBoost with `maxIterations` and `tolerance` on every sub-sample. `weak`
+ * holds the learner parameters: `maxDepth`, `splitBy`, `exactSplits`, and
+ * `leafConfidence` (decision tree), `regularization` and `output` (logistic
+ * regression), `varSmoothing` (naive Bayes), and `bandwidth`, `selection`,
+ * and `gamma` (RBF). Only the parameters of the chosen booster and learner
+ * are read.
  * @param {string} algorithm
  * @param {string} learner
  * @param {Float64Array | number[]} xs
@@ -276,6 +280,11 @@ function __wbg_get_imports() {
         __wbg_Error_208446807d0d1e30: function(arg0, arg1) {
             const ret = Error(getStringFromWasm0(arg0, arg1));
             return ret;
+        },
+        __wbg___wbindgen_boolean_get_4f1baf9a00be3c74: function(arg0) {
+            const v = arg0;
+            const ret = typeof(v) === 'boolean' ? v : undefined;
+            return isLikeNone(ret) ? 0xFFFFFF : ret ? 1 : 0;
         },
         __wbg___wbindgen_is_undefined_be5b34249ff1fc15: function(arg0) {
             const ret = arg0 === undefined;

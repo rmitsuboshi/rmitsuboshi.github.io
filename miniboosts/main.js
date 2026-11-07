@@ -101,6 +101,8 @@ const NAMES = {
     robustboost: 'RobustBoost',
     gradient_boosting: 'Gradient Boosting',
     logitboost: 'LogitBoost',
+    majority_of_five: 'Majority-of-5',
+    larsen_ritzert: 'Larsen\u2013Ritzert',
 };
 const LEARNER_NAMES = {
     decision_tree: 'decision trees',
@@ -130,7 +132,11 @@ const USES = {
     robustboost: ['robust'],
     gradient_boosting: ['gbm'],
     logitboost: ['logit'],
+    majority_of_five: ['tolerance', 'subsample', 'mof'],
+    larsen_ritzert: ['tolerance', 'subsample', 'lr'],
 };
+// Majorities of AdaBoost runs on sub-samples: no rounds, so no timeline.
+const SUBSAMPLE = new Set(['majority_of_five', 'larsen_ritzert']);
 // Boosters that fit real-valued responses and need regression trees.
 const REGRESSION = new Set(['gradient_boosting', 'logitboost']);
 
@@ -203,7 +209,8 @@ function currentView() {
 }
 
 function currentDist() {
-    if (!timeline || stale || !$('showWeights').checked) return null;
+    // Runs without rounds (the sub-sample majorities) have no frames.
+    if (!timeline || stale || !$('showWeights').checked || !timeline.frames.length) return null;
     return timeline.frames[frameIndex].dist;
 }
 
@@ -645,6 +652,8 @@ for (const id of [
     'brownTolerance', 'edgeThreshold', 'bbmGamma', 'bbmTolerance', 'robustTolerance', 'robustTheta',
     'robustSigma', 'gbmLoss', 'shrinkage', 'maxResponse',
     'maxDepth', 'splitBy', 'regularization', 'logisticOutput', 'varSmoothing', 'bandwidth',
+    'nParts', 'maxSubsamples', 'subsampleSeed', 'exactSplits', 'leafConfidence', 'rbfSelection',
+    'rbfGamma',
 ]) {
     // `input` fires while typing, before the field loses focus.
     $(id).addEventListener('input', settingsChanged);
@@ -678,6 +687,10 @@ function readParams() {
             gbmLoss: $('gbmLoss').value,
             shrinkage: num('shrinkage'),
             maxResponse: num('maxResponse'),
+            nParts: Math.round(num('nParts')),
+            // Empty means all sub-samples.
+            maxSubsamples: $('maxSubsamples').value === '' ? 0 : Math.round(num('maxSubsamples')),
+            subsampleSeed: Math.round(num('subsampleSeed')),
         },
         weak: {
             maxDepth: Math.round(num('maxDepth')),
@@ -686,6 +699,10 @@ function readParams() {
             output: $('logisticOutput').value,
             varSmoothing: num('varSmoothing'),
             bandwidth: num('bandwidth'),
+            exactSplits: $('exactSplits').checked,
+            leafConfidence: $('leafConfidence').value,
+            selection: $('rbfSelection').value,
+            gamma: num('rbfGamma'),
         },
     };
 }
@@ -786,9 +803,12 @@ function onResult({ data }) {
             round_budget: 'reached the round bound without the stopping test firing',
             numerical_stop: 'stopped early',
         }[data.stopReason] ?? data.stopReason;
+        const progress = SUBSAMPLE.has(algorithm)
+            ? `${data.rounds} AdaBoost runs`
+            : `${data.rounds} rounds (${how})`;
         setStatus(
             `<b>${NAMES[algorithm]}</b> with ${LEARNER_NAMES[learner]}: ` +
-            `${data.rounds} rounds (${how})<br>` +
+            `${progress}<br>` +
             `Training error ${(100 * data.trainError).toFixed(1)}%` +
             (testLabels.length ? ` &middot; Test error ${(100 * data.testError).toFixed(1)}%` : '') +
             ` &middot; ${data.millis.toFixed(0)} ms` +

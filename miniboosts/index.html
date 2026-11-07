@@ -121,9 +121,11 @@
                             <option value="erlpboost">ERLPBoost</option>
                             <option value="gradient_boosting">Gradient Boosting</option>
                             <option value="graph_separation">Graph Separation Boosting</option>
+                            <option value="larsen_ritzert">Larsen&ndash;Ritzert</option>
                             <option value="logitboost">LogitBoost</option>
                             <option value="lpboost">LPBoost</option>
                             <option value="madaboost">MadaBoost</option>
+                            <option value="majority_of_five">Majority-of-5</option>
                             <option value="mlpboost">MLPBoost</option>
                             <option value="robustboost">RobustBoost</option>
                             <option value="smoothboost">SmoothBoost</option>
@@ -185,6 +187,19 @@
                         <label class="param" data-for="brown" title="Target training error ε; sets the total time c with 1 − erf(√c) = ε">
                             Target error &epsilon; <input id="brownTolerance" type="number" min="0.01" max="0.99" step="0.01" value="0.1">
                         </label>
+                        <p class="param muted" data-for="subsample">
+                            Runs AdaBoost (max iterations and tolerance above) on sub-samples
+                            and takes the unweighted majority vote; no round-by-round timeline.
+                        </p>
+                        <label class="param" data-for="mof" title="Number of disjoint parts; the paper's guarantee is for 5">
+                            Parts <input id="nParts" type="number" min="1" step="1" value="5">
+                        </label>
+                        <label class="param" data-for="lr" title="Use a random subset of Hanneke's sub-samples (an approximation); leave empty to use all">
+                            Max sub-samples <input id="maxSubsamples" type="number" min="1" step="1" placeholder="all">
+                        </label>
+                        <label class="param" data-for="subsample" title="Seed of the shuffle that assigns points to sub-samples">
+                            Seed <input id="subsampleSeed" type="number" min="0" step="1" value="0">
+                        </label>
                         <label class="param" data-for="brown" title="Each round stops when the correlation drops to ν">
                             Edge threshold &nu; <input id="edgeThreshold" type="number" min="0" max="0.99" step="any" value="0.001">
                         </label>
@@ -213,6 +228,16 @@
                                 <option value="edge">Edge</option>
                             </select>
                         </label>
+                        <label class="lparam" data-learner="decision_tree" title="Try every midpoint between distinct values instead of equal-width bins">
+                            <input id="exactSplits" type="checkbox"> Exact splits
+                        </label>
+                        <label class="lparam" data-learner="decision_tree" title="With depth 1, edge splits, exact splits, and ±1 leaves, the stump maximizes the edge exactly">
+                            Leaves
+                            <select id="leafConfidence">
+                                <option value="purity">Weighted purity</option>
+                                <option value="sign">&plusmn;1</option>
+                            </select>
+                        </label>
                         <label class="lparam" data-learner="logistic_regression" title="L2 regularization λ of the weighted logistic loss">
                             Regularization &lambda; <input id="regularization" type="number" min="0" step="any" value="0.0001">
                         </label>
@@ -228,6 +253,17 @@
                         </label>
                         <label class="lparam" data-learner="rbf" title="Bandwidth σ of the bumps exp(−‖x − x_c‖² / 2σ²); the plane is [−1, 1]²">
                             Bandwidth &sigma; <input id="bandwidth" type="number" min="0.01" step="0.05" value="0.2">
+                        </label>
+                        <label class="lparam" data-learner="rbf" title="Adversarial rules return barely edge γ, to test boosters under the weak-learning assumption">
+                            Selection
+                            <select id="rbfSelection">
+                                <option value="largest">Largest edge</option>
+                                <option value="weakest">Smallest edge &ge; &gamma;</option>
+                                <option value="exactly">Edge exactly &gamma;</option>
+                            </select>
+                        </label>
+                        <label class="lparam" data-learner="rbf" title="Edge γ for the adversarial selection rules">
+                            Edge &gamma; <input id="rbfGamma" type="number" min="0.01" max="1" step="0.01" value="0.1">
                         </label>
                         <p class="lparam muted" data-learner="bounded_linear">
                             Exact edge maximization over bounded linear functions. A combination of
