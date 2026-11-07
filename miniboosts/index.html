@@ -6,7 +6,7 @@
         <title>MiniBoosts</title>
         <meta name="description" content="MiniBoosts: a Rust library for implementing and comparing boosting algorithms, with an in-browser playground.">
         <link rel="stylesheet" href="../fonts/play.css" type="text/css">
-        <link rel="stylesheet" href="demo.css" type="text/css">
+        <link rel="stylesheet" href="demo.css?v=20261107b" type="text/css">
     </head>
     <body>
         <nav class="crumbs"><a href="../index.html">&larr; Ryotaro Mitsuboshi's Home Page</a></nav>
@@ -362,6 +362,7 @@ let predictions = f.predict_all(&amp;sample);</code></pre>
             &copy; Ryotaro Mitsuboshi.
         </footer>
 
-        <script type="module" src="main.js"></script>
+        <!-- Bump v= on every deployment so browsers fetch the new scripts and styles. -->
+        <script type="module" src="main.js?v=20261107b"></script>
     </body>
 </html>

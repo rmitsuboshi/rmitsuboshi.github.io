@@ -140,6 +140,12 @@ const SUBSAMPLE = new Set(['majority_of_five', 'larsen_ritzert']);
 // Boosters that fit real-valued responses and need regression trees.
 const REGRESSION = new Set(['gradient_boosting', 'logitboost']);
 
+// The asset version in this module's query string (set in index.html), passed
+// on to the worker and the modules loaded later. GitHub Pages lets browsers
+// cache files for 10 minutes, so without it a new page could run an older
+// cached script.
+const ASSET_VERSION = new URL(import.meta.url).search;
+
 const $ = (id) => document.getElementById(id);
 const canvas = $('canvas');
 const ctx = canvas.getContext('2d');
@@ -610,7 +616,7 @@ function loadedMessage(text) {
 // ---------------------------------------------------------------- parameters
 
 function updateParamVisibility() {
-    const uses = USES[$('algorithm').value];
+    const uses = USES[$('algorithm').value] ?? [];
     for (const el of document.querySelectorAll('.param')) {
         const group = el.dataset.for;
         el.hidden = group !== 'all' && !uses.includes(group);
@@ -716,7 +722,7 @@ let rerun = false;
 
 function startWorker() {
     worker?.terminate();
-    worker = new Worker('worker.js', { type: 'module' });
+    worker = new Worker(`worker.js${ASSET_VERSION}`, { type: 'module' });
     worker.onmessage = onResult;
     worker.onerror = (e) => {
         e.preventDefault();
@@ -1410,7 +1416,7 @@ async function saveGif() {
     drawLossChart();
     for (const id of ['saveGif', 'play', 'round']) $(id).disabled = true;
     try {
-        const { GIFEncoder, quantize, applyPalette } = await import('./gifenc/gifenc.esm.js');
+        const { GIFEncoder, quantize, applyPalette } = await import(`./gifenc/gifenc.esm.js${ASSET_VERSION}`);
         const { pad, header, board, chartTitle, chartHeight } = GIF_LAYOUT;
         const out = document.createElement('canvas');
         out.width = pad + board + pad;

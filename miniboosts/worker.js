@@ -1,9 +1,16 @@
 // Runs MiniBoosts (compiled to WebAssembly) off the main thread.
 // A Rust panic aborts the wasm instance, so the page discards this worker
 // after any error and starts a fresh one.
-import init, { train } from './pkg/miniboosts_web.js';
-
-const ready = init();
+// The page passes its asset version as this script's query string; it is
+// forwarded so that a cached module of an older deployment is never mixed in.
+const version = self.location.search;
+let train;
+const ready = import(`./pkg/miniboosts_web.js${version}`).then(async (module) => {
+    await module.default({
+        module_or_path: new URL(`./pkg/miniboosts_web_bg.wasm${version}`, self.location.href),
+    });
+    train = module.train;
+});
 
 self.onmessage = async ({ data }) => {
     const { id, algorithm, learner, xs, ys, labels, test, booster, weak, resolution } = data;
