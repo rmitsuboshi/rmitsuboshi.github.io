@@ -6,7 +6,7 @@
         <title>MiniBoosts</title>
         <meta name="description" content="MiniBoosts: a Rust library for implementing and comparing boosting algorithms, with an in-browser playground.">
         <link rel="stylesheet" href="../fonts/play.css" type="text/css">
-        <link rel="stylesheet" href="demo.css?v=20261107b" type="text/css">
+        <link rel="stylesheet" href="demo.css?v=20261108a" type="text/css">
     </head>
     <body>
         <nav class="crumbs"><a href="../index.html">&larr; Ryotaro Mitsuboshi's Home Page</a></nav>
@@ -152,6 +152,17 @@
                         <label class="param" data-for="sparsi" title="At most T hypotheses in the output; leave empty to use only v">
                             Target size T <input id="nHypotheses" type="number" min="1" step="1" value="10" placeholder="none">
                         </label>
+                        <label class="param" data-for="sparsi" title="The booster whose ensemble is sparsified. The paper's bounds assume AdaBoostV; otherwise the gap grows by at most the margin change">
+                            First stage
+                            <select id="firstStage">
+                                <option value="adaboostv">AdaBoostV</option>
+                                <option value="totalboost">TotalBoost</option>
+                                <option value="lpboost">LPBoost (&nu; = 1)</option>
+                            </select>
+                        </label>
+                        <label class="param" data-for="sparsi" title="Tolerance of a first stage other than AdaBoostV (AdaBoostV's follows from T and v)">
+                            First-stage tolerance <input id="firstStageTolerance" type="number" min="0.0001" max="1" step="0.005" value="0.01">
+                        </label>
                         <label class="param" data-for="sparsi" title="Target gap v; AdaBoostV runs ⌈8 ln m / v²⌉ rounds. Leave empty to use only T">
                             Target gap v <input id="gap" type="number" min="0.05" step="0.05" placeholder="none">
                         </label>
@@ -188,9 +199,19 @@
                             Target error &epsilon; <input id="brownTolerance" type="number" min="0.01" max="0.99" step="0.01" value="0.1">
                         </label>
                         <p class="param muted" data-for="subsample">
-                            Runs AdaBoost (max iterations and tolerance above) on sub-samples
-                            and takes the unweighted majority vote; no round-by-round timeline.
+                            Runs the inner booster (max iterations and tolerance above) on
+                            sub-samples and takes the unweighted majority vote; no round-by-round
+                            timeline.
                         </p>
+                        <label class="param" data-for="subsample" title="The booster run on every sub-sample; LPBoost uses ν = 1">
+                            Inner booster
+                            <select id="innerBooster">
+                                <option value="adaboost">AdaBoost</option>
+                                <option value="adaboostv">AdaBoostV (AdaBoost*&nu;)</option>
+                                <option value="totalboost">TotalBoost</option>
+                                <option value="lpboost">LPBoost (&nu; = 1)</option>
+                            </select>
+                        </label>
                         <label class="param" data-for="mof" title="Number of disjoint parts; the paper's guarantee is for 5">
                             Parts <input id="nParts" type="number" min="1" step="1" value="5">
                         </label>
@@ -365,6 +386,6 @@ let predictions = f.predict_all(&amp;sample);</code></pre>
         </footer>
 
         <!-- Bump v= on every deployment so browsers fetch the new scripts and styles. -->
-        <script type="module" src="main.js?v=20261107b"></script>
+        <script type="module" src="main.js?v=20261108a"></script>
     </body>
 </html>

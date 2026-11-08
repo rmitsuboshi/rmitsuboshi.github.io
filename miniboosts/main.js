@@ -659,7 +659,7 @@ for (const id of [
     'robustSigma', 'gbmLoss', 'shrinkage', 'maxResponse',
     'maxDepth', 'splitBy', 'regularization', 'logisticOutput', 'varSmoothing', 'bandwidth',
     'nParts', 'maxSubsamples', 'subsampleSeed', 'exactSplits', 'leafConfidence', 'rbfSelection',
-    'rbfGamma',
+    'rbfGamma', 'innerBooster', 'firstStage', 'firstStageTolerance',
 ]) {
     // `input` fires while typing, before the field loses focus.
     $(id).addEventListener('input', settingsChanged);
@@ -697,6 +697,9 @@ function readParams() {
             // Empty means all sub-samples.
             maxSubsamples: $('maxSubsamples').value === '' ? 0 : Math.round(num('maxSubsamples')),
             subsampleSeed: Math.round(num('subsampleSeed')),
+            innerBooster: $('innerBooster').value,
+            firstStage: $('firstStage').value,
+            firstStageTolerance: num('firstStageTolerance'),
         },
         weak: {
             maxDepth: Math.round(num('maxDepth')),
@@ -810,7 +813,7 @@ function onResult({ data }) {
             numerical_stop: 'stopped early',
         }[data.stopReason] ?? data.stopReason;
         const progress = SUBSAMPLE.has(algorithm)
-            ? `${data.rounds} AdaBoost runs`
+            ? `${data.rounds} ${$('innerBooster').selectedOptions[0].textContent.trim()} runs`
             : `${data.rounds} rounds (${how})`;
         setStatus(
             `<b>${NAMES[algorithm]}</b> with ${LEARNER_NAMES[learner]}: ` +
