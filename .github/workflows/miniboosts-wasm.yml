@@ -1,0 +1,89 @@
+# Builds the WebAssembly module of the MiniBoosts playground from the
+# miniboosts commit named in `miniboosts/MINIBOOSTS_REV` and commits the
+# result to `miniboosts/pkg`, so that the module is never built by hand.
+#
+# The commit is pinned on purpose: `miniboosts/main.js` and `index.html`
+# call the module's API, so a new revision is adopted together with any
+# change they need. To update the playground, either
+# - change `miniboosts/MINIBOOSTS_REV` (with the matching edits to `main.js`
+#   and `index.html`, if any) and push to master, or
+# - run this workflow by hand with a revision; it then also updates the pin.
+name: Build the MiniBoosts playground
+
+on:
+  workflow_dispatch:
+    inputs:
+      rev:
+        description: miniboosts commit, tag, or branch (default, the pinned commit)
+        required: false
+        default: ""
+  push:
+    branches: [master]
+    paths: [miniboosts/MINIBOOSTS_REV]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: miniboosts-wasm
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Choose the miniboosts revision
+        id: rev
+        env:
+          REQUESTED: ${{ inputs.rev }}
+        run: |
+          rev="${REQUESTED:-}"
+          if [ -z "$rev" ]; then
+            rev="$(tr -d '[:space:]' < miniboosts/MINIBOOSTS_REV)"
+          fi
+          echo "rev=$rev" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v6
+        with:
+          repository: rmitsuboshi/miniboosts
+          ref: ${{ steps.rev.outputs.rev }}
+          # Outside the site's files, so that it is not committed below.
+          path: _miniboosts_src
+
+      - name: Install the wasm toolchain
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup target add wasm32-unknown-unknown
+          # The CLI must match the `wasm-bindgen` version of the web crate.
+          version="$(sed -n 's/^wasm-bindgen = "=\(.*\)"$/\1/p' _miniboosts_src/web/Cargo.toml)"
+          test -n "$version"
+          cargo install wasm-bindgen-cli --version "$version" --locked
+          sudo apt-get update
+          sudo apt-get install --yes binaryen
+
+      - name: Build the module
+        run: sh _miniboosts_src/web/build.sh "$PWD/miniboosts/pkg"
+
+      - name: Record the revision and bump the asset version
+        run: |
+          sha="$(git -C _miniboosts_src rev-parse HEAD)"
+          echo "$sha" > miniboosts/MINIBOOSTS_REV
+          # Browsers cache the scripts and the module by this query string.
+          stamp="$(date -u +%Y%m%d)$(echo "$sha" | cut -c1-7)"
+          sed -E -i "s/\?v=[0-9A-Za-z]+/?v=$stamp/g" miniboosts/index.html
+          grep -c "?v=$stamp" miniboosts/index.html
+
+      - name: Commit the module
+        run: |
+          rm -rf _miniboosts_src
+          git add miniboosts/pkg miniboosts/MINIBOOSTS_REV miniboosts/index.html
+          if git diff --cached --quiet -- miniboosts/pkg; then
+            echo "The module is unchanged; nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Build the MiniBoosts playground from miniboosts $(cut -c1-7 miniboosts/MINIBOOSTS_REV)"
+          git push
