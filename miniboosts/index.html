@@ -249,7 +249,7 @@
                                 <option value="edge">Edge</option>
                             </select>
                         </label>
-                        <label class="lparam" data-learner="decision_tree" title="Try every midpoint between distinct values instead of equal-width bins">
+                        <label class="lparam" data-learner="decision_tree" title="Try every midpoint between distinct values even with more than 255 of them; with fewer, every midpoint is tried already">
                             <input id="exactSplits" type="checkbox"> Exact splits
                         </label>
                         <label class="lparam" data-learner="decision_tree" title="With depth 1, edge splits, exact splits, and ±1 leaves, the stump maximizes the edge exactly">
