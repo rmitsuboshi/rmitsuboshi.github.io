@@ -27,49 +27,31 @@ const THEMES = {
             reference: '#c0392b',
         },
     },
-    // Neon accents on the page's light background.
+    // Three colors on the light page: azure and amber for the classes, which
+    // lie on the blue-yellow axis that red-green color blindness keeps, and
+    // ink for the boundary, the loss curve, and the accents. Under the
+    // simulations of Machado et al. (2009) for protan, deutan, and tritan
+    // vision, the lightly shaded class regions differ by ΔE ≥ 17 (CIELAB);
+    // the points also differ in shape.
     cyberpunk: {
         background: [255, 255, 255],
-        classes: { 1: [0, 174, 230], [-1]: [255, 0, 128] },
+        classes: { 1: [0, 140, 220], [-1]: [245, 170, 0] },
         shade: [0.05, 0.3],
-        boundary: '#7a00ff',
-        glow: 'rgba(122, 0, 255, 0.45)',
-        axes: 'rgba(122, 0, 255, 0.1)',
+        boundary: '#20203a',
+        glow: null,
+        axes: 'rgba(32, 32, 58, 0.08)',
         ring: '#fff',
         testFill: 'rgba(255, 255, 255, 0.6)',
         chart: {
             background: null,
-            grid: 'rgba(122, 0, 255, 0.1)',
+            grid: 'rgba(32, 32, 58, 0.08)',
             text: '#666',
-            label: '#333',
+            label: '#20203a',
             labelBackground: 'rgba(255, 255, 255, 0.85)',
-            cursor: 'rgba(122, 0, 255, 0.35)',
-            train: '#7a00ff',
-            test: '#ff8a00',
-            reference: '#ff0080',
-        },
-    },
-    // The same idea on a dark panel, for dark surroundings.
-    'cyberpunk-dark': {
-        background: [10, 11, 26],
-        classes: { 1: [0, 240, 255], [-1]: [255, 42, 109] },
-        // Darker regions so that the neon points and boundary stand out.
-        shade: [0.06, 0.3],
-        boundary: '#f9f871',
-        glow: 'rgba(249, 248, 113, 0.9)',
-        axes: 'rgba(0, 240, 255, 0.14)',
-        ring: '#0a0b1a',
-        testFill: 'rgba(10, 11, 26, 0.55)',
-        chart: {
-            background: '#0a0b1a',
-            grid: 'rgba(0, 240, 255, 0.12)',
-            text: '#8b90b8',
-            label: '#d6d9f5',
-            labelBackground: 'rgba(10, 11, 26, 0.85)',
-            cursor: 'rgba(214, 217, 245, 0.45)',
-            train: '#f9f871',
-            test: '#b967ff',
-            reference: '#ff2a6d',
+            cursor: 'rgba(32, 32, 58, 0.3)',
+            train: '#20203a',
+            test: '#8c8ca0',
+            reference: '#008cdc',
         },
     },
 };
@@ -110,6 +92,7 @@ const LEARNER_NAMES = {
     bounded_linear: 'bounded linear functions',
     naive_bayes: 'Gaussian naive Bayes',
     rbf: 'RBF bumps',
+    neural_network: 'two-layer networks',
     regression_tree: 'regression trees',
 };
 // Which optional parameter groups each algorithm uses.
@@ -432,32 +415,52 @@ const uniform = (rand) => rand() * 1.8 - 0.9;
 // Each preset maps a seeded generator to a list of points. The seed is
 // fixed, so the thumbnail shows exactly the points that a click places.
 const PRESETS = [
-    ['linear', 'Linear', (rand) => {
+    // Two overlapping Gaussian clouds, +1 at the top left and -1 at the
+    // bottom right: an example of overfitting. The best boundary is the
+    // diagonal y = x, which errs on about 8% of the points (the centers are
+    // 2.8 standard deviations apart). A flexible model reaches zero training
+    // error with a jagged boundary around the stray points and errs more on
+    // the test points; a straight or smooth boundary keeps some training
+    // error and does about as well on the test points. The test draw has
+    // 300 points, so that the test error is measured precisely.
+    ['overlap', 'Overlap', (rand, test) => {
         const out = [];
-        while (out.length < 50) {
-            const x = uniform(rand);
-            const y = uniform(rand);
-            const s = y - 0.5 * x - 0.1;
-            if (Math.abs(s) > 0.12) out.push({ x, y, label: s > 0 ? 1 : -1 });
-        }
-        return out;
-    }],
-    ['noisy', 'Noisy linear', (rand) => {
-        const out = [];
-        for (let i = 0; i < 60; i++) {
-            const x = uniform(rand);
-            const y = uniform(rand);
-            let label = y > 0.6 * x ? 1 : -1;
-            if (rand() < 0.1) label = -label;
-            out.push({ x, y, label });
-        }
-        return out;
-    }],
-    ['blobs', 'Blobs', (rand) => {
-        const out = [];
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < (test ? 300 : 100); i++) {
             const label = i % 2 ? 1 : -1;
-            out.push({ x: 0.4 * label + 0.22 * gaussian(rand), y: 0.25 * label + 0.22 * gaussian(rand), label });
+            const center = 0.35 * label;
+            out.push({ x: -center + 0.35 * gaussian(rand), y: center + 0.35 * gaussian(rand), label });
+        }
+        return out;
+    }],
+    // Two separated clouds with about 8% of the points mislabeled, deep
+    // inside the other cloud: an example of label noise. With "Point size =
+    // weight", AdaBoost's weight piles up on the mislabeled points. On this
+    // draw, AdaBoost with stumps leaves them misclassified (training error
+    // 10%, test 8.3%), but with depth-2 trees it carves islands around them
+    // (training 0%, test 16%). The capping parameter ν of the soft-margin
+    // boosters decides: LPBoost with stumps fits them with ν = 10 (training
+    // 0%, test 19.7%) and gives them up with ν = 30 (10%, 8.3%).
+    ['outliers', 'Outliers', (rand, test) => {
+        const out = [];
+        for (let i = 0; i < (test ? 300 : 100); i++) {
+            const label = i % 2 ? 1 : -1;
+            const x = -0.5 * label + 0.2 * gaussian(rand);
+            const y = 0.35 * gaussian(rand);
+            out.push({ x, y, label: rand() < 0.08 ? -label : label });
+        }
+        return out;
+    }],
+    // Separable by the diagonal y = x with a gap of 0.1 on each side: an
+    // example of a weak learner's bias. A linear learner draws the line at
+    // once; axis-parallel stumps and trees need many rounds and approximate
+    // it by a staircase.
+    ['diagonal', 'Diagonal', (rand) => {
+        const out = [];
+        while (out.length < 80) {
+            const x = uniform(rand);
+            const y = uniform(rand);
+            const s = (y - x) / Math.SQRT2;
+            if (Math.abs(s) > 0.1) out.push({ x, y, label: s > 0 ? 1 : -1 });
         }
         return out;
     }],
@@ -521,8 +524,10 @@ const PRESETS = [
 ];
 
 const PRESET_SEED = 20261101;
-const generate = (make, seed) =>
-    make(mulberry32(seed)).map((p) => ({ ...p, x: clip(p.x), y: clip(p.y) }));
+// `test` asks for the held-out draw; a preset may make it larger, so that
+// the test error is measured on more points than the training error.
+const generate = (make, seed, test = false) =>
+    make(mulberry32(seed), test).map((p) => ({ ...p, x: clip(p.x), y: clip(p.y) }));
 
 const thumbnails = [];
 
@@ -553,7 +558,7 @@ for (const [key, title, make] of PRESETS) {
     button.addEventListener('click', () => {
         field = null;
         // Test points: an independent draw from the same generator.
-        const test = generate(make, PRESET_SEED + 1).map((p) => ({ ...p, test: true }));
+        const test = generate(make, PRESET_SEED + 1, true).map((p) => ({ ...p, test: true }));
         setPoints([...data.map((p) => ({ ...p })), ...test]);
         selectPreset(button);
         loadedMessage(`Loaded “${title}”.`);
@@ -660,6 +665,8 @@ for (const id of [
     'maxDepth', 'splitBy', 'regularization', 'logisticOutput', 'varSmoothing', 'bandwidth',
     'nParts', 'maxSubsamples', 'subsampleSeed', 'exactSplits', 'leafConfidence', 'rbfSelection',
     'rbfGamma', 'innerBooster', 'firstStage', 'firstStageTolerance',
+    'hiddenUnits', 'activation', 'optimizer', 'learningRate', 'iterations', 'batchSize',
+    'networkSeed',
 ]) {
     // `input` fires while typing, before the field loses focus.
     $(id).addEventListener('input', settingsChanged);
@@ -712,6 +719,14 @@ function readParams() {
             leafConfidence: $('leafConfidence').value,
             selection: $('rbfSelection').value,
             gamma: num('rbfGamma'),
+            hiddenUnits: Math.round(num('hiddenUnits')),
+            activation: $('activation').value,
+            optimizer: $('optimizer').value,
+            learningRate: num('learningRate'),
+            iterations: Math.round(num('iterations')),
+            // Empty means full batches.
+            batchSize: $('batchSize').value === '' ? 0 : Math.round(num('batchSize')),
+            networkSeed: Math.round(num('networkSeed')),
         },
     };
 }

@@ -230,42 +230,15 @@ select { width: 100%; padding: 4px; }
 .view-row { justify-content: space-between; font-size: 0.9em; }
 .view-row select { width: auto; margin-left: 6px; }
 
-/* Cyberpunk: crisp neon accents on the light page. */
+/* Cyberpunk: ink accents on the light page, matching the boundary. */
 .playground[data-theme="cyberpunk"] canvas#canvas {
-    border-color: rgba(122, 0, 255, 0.45);
-    box-shadow: 0 0 14px rgba(122, 0, 255, 0.14);
+    border-color: rgba(32, 32, 58, 0.35);
+    box-shadow: 0 0 14px rgba(0, 140, 220, 0.12);
 }
-.playground[data-theme="cyberpunk"] .board h3 { color: #7a00ff; }
-.playground[data-theme="cyberpunk"] .slider-row input[type="range"] { accent-color: #7a00ff; }
-.playground[data-theme="cyberpunk"] .presets canvas { border-color: rgba(122, 0, 255, 0.3); }
+.playground[data-theme="cyberpunk"] .board h3 { color: #20203a; }
+.playground[data-theme="cyberpunk"] .slider-row input[type="range"] { accent-color: #20203a; }
+.playground[data-theme="cyberpunk"] .presets canvas { border-color: rgba(32, 32, 58, 0.25); }
 
-/* Cyberpunk (dark): the board (plot, slider, loss chart) on a dark panel
-   with neon accents; the controls keep the page style. */
-.playground[data-theme="cyberpunk-dark"] .board {
-    background: #0a0b1a;
-    color: #d6d9f5;
-    padding: 10px;
-    border-radius: 6px;
-    box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.25), 0 0 18px rgba(185, 103, 255, 0.18);
-}
-.playground[data-theme="cyberpunk-dark"] canvas#canvas { border-color: rgba(0, 240, 255, 0.35); }
-.playground[data-theme="cyberpunk-dark"] .board h3 { color: #f9f871; }
-.playground[data-theme="cyberpunk-dark"] .board .muted,
-.playground[data-theme="cyberpunk-dark"] .board .legend,
-.playground[data-theme="cyberpunk-dark"] #timelineNote { color: #8b90b8; }
-.playground[data-theme="cyberpunk-dark"] .slider-row input[type="range"] { accent-color: #f9f871; }
-.playground[data-theme="cyberpunk-dark"] .board button,
-.playground[data-theme="cyberpunk-dark"] .board select {
-    background: #14162e;
-    color: #d6d9f5;
-    border-color: rgba(0, 240, 255, 0.4);
-}
-.playground[data-theme="cyberpunk-dark"] .chart-tip {
-    background: #14162e;
-    color: #d6d9f5;
-    border-color: rgba(0, 240, 255, 0.4);
-}
-.playground[data-theme="cyberpunk-dark"] .presets canvas { background: #0a0b1a; border-color: rgba(0, 240, 255, 0.3); }
 .classes .muted { font-weight: 400; }
 .classes .pos { color: var(--pos); }
 .classes .neg { color: var(--neg); }
